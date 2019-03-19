@@ -4,9 +4,9 @@ var content = [
 	{
 		"id": 1,
 		"tie":1,
-		"name": "IDEA 项目上传到github",
+		"name": "啞鈴健身計劃",
 		"content":"",
-		"url":"file/IDEA 项目上传到github.mht",
+		"url":"file/啞鈴健身計劃.html",
 		"date":"2019-01-02"
 	},{
 		"id": 2,
