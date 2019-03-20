@@ -1,41 +1,98 @@
 <html>
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <script type="text/javascript"
 	src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<script type="text/javascript" src="docs/type.js"></script> <!-- 引入分類 -->
-<script type="text/javascript" src="docs/content.js"></script> <!-- 引入文章-->
-
+<script type="text/javascript" src="docs/type.js"></script>
+<!-- 引入分類 -->
+<script type="text/javascript" src="docs/content.js"></script>
+<!-- 引入文章-->
 <script type="text/javascript">
 	$(function() {
-		$.each(type,function(i,o){
+		$.each(type, function(i, o) {
 			var btn = $("<button type='button'>");
-			btn.attr("id",o.id);
-			btn.click(function(){
-				$("#content_ul").remove();
-				var ul = $("<ul id='content_ul'>");
-				$.each(content,function(i,o){
-					var li = $("<li>");
-					var a = '<a target="_blank" rel="noopener noreferrer" href="'+o.url+'">'+o.name+'</a>'
-					li.append($(a));
-					ul.append(li);
-				})
-				$("#content").append(ul);
+			btn.attr("id", o.id);
+			btn.click(function() {
+				var id = $(this).attr("id"); //取得分類id
+				selByIdAndYear(id);
 			})
 			btn.html(o.name)
 			$("#type").append(btn);
-			
-		})
-	})
-</script>
-</head>
-<body style="text-align: center;">
-	<div id="header"></div>
-	<div id="type"></div>
 
-	<div id="content">
+		});
+
+		$("#name").html(userInfo.name);
+		$("#headUrl").attr("src",userInfo.headUrl);
+		$("#headUrl").attr("alt",userInfo.name);
 		
-	</div>
+		
 
-	<div id="footer"></div>
+		selByIdAndYear(1);//默認選擇項
+	})
+
+	function selByIdAndYear(id) {
+		var year = $("#year").find("option:selected").text();
+
+		$("#content_ul").remove();
+		var ul = $("<ul id='content_ul'>");
+		$
+				.each(
+						content,
+						function(i, o) {
+							if (id == o.tid && o.date.indexOf(year) > -1) {
+								var li = $("<li>");
+								var a = '<a target="_blank" rel="noopener noreferrer" href="'+o.url+'">'
+										+ o.name
+										+ '&nbsp;'
+										+ o.date
+										+ '</a><br/>';
+								li.append($(a));
+								ul.append(li);
+							}
+						})
+		$("#content").append(ul);
+	}
+</script>
+<style type="text/css">
+html, body {
+	height: 100%;
+	margin: 0;
+}
+
+.content {
+	min-height: 100%;
+}
+
+.content-inside {
+	padding: 20px;
+	padding-bottom: 50px;
+}
+
+.footer {
+	height: 30px;
+	margin-top: -30px;
+}
+</style>
+</head>
+
+<body style="text-align: center;">
+
+	<div class="content">
+		<div id="header">
+			<br />
+			<img id="headUrl"  style="border-radius: 50%;"> <br /> 
+			<span id="name"></span> <br /> 
+			我在<select id="year"><option>2018</option><option>2019</option></select>記錄<br />
+			<br />
+			<div id="type"></div>
+		</div>
+		<div class="content-inside" id="content"></div>
+	</div>
+	<footer class="footer">
+		CopyLeft<img alt="開源" style="width: 15px; height: 15px;"
+			src="file/cpl.png" />from <a href="https://github.com/dxking100">github.com/dxking100</a>
+	</footer>
 </body>
+
+
 </html>
