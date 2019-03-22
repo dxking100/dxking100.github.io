@@ -21,6 +21,13 @@ var content = [
 		"content":"",
 		"url":"file/TheHistoryOfCommunicationTechnology.html",
 		"date":"2018-06-11"
+	},{
+		"id": 4,
+		"tid":9,
+		"name": "軟件工程學習",
+		"content":"",
+		"url":"file/softwareengineering.htm",
+		"date":"2018-06-11"
 	}
 
 
