@@ -45,11 +45,20 @@ var content = [
 	},{
 		"id": 7,
 		"tid":9,
-		"name": "概述",
+		"name": "軟件工程概述",
 		"content":"",
 		"url":"file/outline.htm",
 		"date":"2019-3-26"
+	},{
+		"id": 8,
+		"tid":9,
+		"name": "軟件過程",
+		"content":"",
+		"url":"softwareprocess.htm",
+		"date":"2019-3-26"
 	}
+
+	
 
 	
 
