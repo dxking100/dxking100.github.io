@@ -56,6 +56,13 @@ var content = [
 		"content":"",
 		"url":"softwareprocess.htm",
 		"date":"2019-3-26"
+	},{
+		"id": 9,
+		"tid":3,
+		"name": "iBeacon",
+		"content":"",
+		"url":"file/ibeacon.htm",
+		"date":"2019-03-28"
 	}
 
 	
