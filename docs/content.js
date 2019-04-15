@@ -63,11 +63,26 @@ var content = [
 		"content":"",
 		"url":"file/ibeacon.htm",
 		"date":"2019-03-28"
+	},{
+		"id": 10,
+		"tid":9,
+		"name": "敏捷軟件開發",
+		"content":"",
+		"url":"mzrjkf.htm",
+		"date":"2019-3-28"
+	},{
+		"id": 11,
+		"tid":9,
+		"name": "需求工程",
+		"content":"",
+		"url":"xqgc.htm",
+		"date":"2019-4-11"
+	},{
+		"id": 12,
+		"tid":9,
+		"name": "系統建模",
+		"content":"",
+		"url":"xtjm.htm",
+		"date":"2019-4-15"
 	}
-
-	
-
-	
-
-
 ];
