@@ -1,0 +1,306 @@
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta name=Generator content="Microsoft Word 15 (filtered)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:新細明體;
+	panose-1:2 2 5 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:"Microsoft YaHei";
+	panose-1:2 11 5 3 2 2 4 2 2 4;}
+@font-face
+	{font-family:微軟正黑體;
+	panose-1:2 11 6 4 3 5 4 4 2 4;}
+@font-face
+	{font-family:"\@Microsoft YaHei";
+	panose-1:2 11 5 3 2 2 4 2 2 4;}
+@font-face
+	{font-family:"\@微軟正黑體";
+	panose-1:2 11 6 4 3 5 4 4 2 4;}
+@font-face
+	{font-family:"\@新細明體";
+	panose-1:2 2 5 0 0 0 0 0 0 0;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Calibri","sans-serif";}
+p
+	{margin-right:0cm;
+	margin-left:0cm;
+	font-size:12.0pt;
+	font-family:"Times New Roman","serif";}
+.MsoChpDefault
+	{font-family:"Calibri","sans-serif";}
+ /* Page Definitions */
+ @page WordSection1
+	{size:595.3pt 841.9pt;
+	margin:72.0pt 90.0pt 72.0pt 90.0pt;
+	layout-grid:18.0pt;}
+div.WordSection1
+	{page:WordSection1;}
+-->
+</style>
+
+</head>
+
+<body lang=ZH-TW style='text-justify-trim:punctuation'>
+
+<div class=WordSection1 style='layout-grid:18.0pt'>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span style='font-size:20.0pt;
+font-family:"Microsoft YaHei","sans-serif"'>體系結構設計</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=EN-US style='font-size:
+10.0pt;font-family:"Calibri","sans-serif";color:#767676'>2019</span><span
+style='font-size:10.0pt;font-family:"微軟正黑體","sans-serif";color:#767676'>年</span><span
+lang=EN-US style='font-size:10.0pt;font-family:"Calibri","sans-serif";
+color:#767676'>4</span><span style='font-size:10.0pt;font-family:"微軟正黑體","sans-serif";
+color:#767676'>月</span><span lang=EN-US style='font-size:10.0pt;font-family:
+"Calibri","sans-serif";color:#767676'>25</span><span style='font-size:10.0pt;
+font-family:"微軟正黑體","sans-serif";color:#767676'>日</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span style='font-size:10.0pt;
+font-family:"微軟正黑體","sans-serif";color:#767676'>上午</span><span lang=EN-US
+style='font-size:10.0pt;font-family:"Calibri","sans-serif";color:#767676'>
+10:15</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span style='font-size:11.0pt;
+font-family:"Microsoft YaHei","sans-serif"'>體系結構應該在前期設計時考慮進去，不應該 后期加，因為后期加成本很高。</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span style='font-size:11.0pt;
+font-family:"Microsoft YaHei","sans-serif"'>體系結構模型炅示了這些構件以及它們之間的連接關系。</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=EN-US style='font-size:
+11.0pt;font-family:"Microsoft YaHei","sans-serif"'>&nbsp;</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span style='font-size:11.0pt;
+font-family:"Microsoft YaHei","sans-serif"'>在需求工程進行時，要提出一個抽象的系統結構：</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=EN-US style='font-size:
+11.0pt;font-family:"Calibri","sans-serif"'>1.</span><span style='font-size:
+11.0pt;font-family:"Microsoft YaHei","sans-serif"'>小系統關單程序結構。</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=EN-US style='font-size:
+11.0pt;font-family:"Calibri","sans-serif"'>2.</span><span style='font-size:
+11.0pt;font-family:"Microsoft YaHei","sans-serif"'>大系統關注關聯系統結構。</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=EN-US style='font-size:
+11.0pt;font-family:"Microsoft YaHei","sans-serif"'>&nbsp;</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span style='font-size:11.0pt;
+font-family:"Microsoft YaHei","sans-serif"'>軟件系統結構會影響 ：系統的性能、健壯性、分布性和可維護性。</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span style='font-size:11.0pt;
+font-family:"Microsoft YaHei","sans-serif"'>體系統構有三大好處：利益相關者交流、系統分析、大范圍復用。</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=EN-US style='font-size:
+11.0pt;font-family:"Microsoft YaHei","sans-serif"'>&nbsp;</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span style='font-size:11.0pt;
+font-family:"Microsoft YaHei","sans-serif"'>系統體系結構經常以簡單的框圖進行非正式建模，呈現了一種 系統結構的高層樣貌。</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=EN-US style='font-size:
+11.0pt;font-family:"Calibri","sans-serif"'><img width=324 height=324 id="圖片 8"
+src="txjgsj.files/image001.jpg"
+alt="丆 &#10;视 觉 系 统 &#10;识 别 系 统 &#10;机 械 臂 控 制 器 &#10;打 包 方 式 &#10;选 择 系 统 &#10;打 包 系 统 &#10;抓 手 控 制 器 &#10;传 送 带 控 制 器 &#10;000 匡 00 打 包 机 器 人 控 制 系 统 的 体 系 结 构 "></span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=EN-US style='font-size:
+11.0pt;font-family:"Microsoft YaHei","sans-serif"'>&nbsp;</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=EN-US style='font-size:
+11.0pt;font-family:"Microsoft YaHei","sans-serif"'>&nbsp;</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=EN-US style='font-size:
+11.0pt;font-family:"Calibri","sans-serif"'>------------------------------------------------------------------------------------------------------------------------</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span style='font-size:11.0pt;
+font-family:"Microsoft YaHei","sans-serif"'>體系結構設計決策：</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span style='font-size:11.0pt;
+font-family:"Microsoft YaHei","sans-serif"'>設計一個滿足功能性與非功能性需求的系統組織結構。</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span style='font-size:11.0pt;
+font-family:"Microsoft YaHei","sans-serif"'>設計時應拆分得更細，確定結構中有多少是可以利用。</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span style='font-size:11.0pt;
+font-family:"Microsoft YaHei","sans-serif"'>系統結構的風格與結構應由非功能性需求決定：</span><span
+lang=EN-US style='font-size:11.0pt;font-family:"Calibri","sans-serif"'>1.</span><span
+style='font-size:11.0pt;font-family:"Microsoft YaHei","sans-serif"'>性能，</span><span
+lang=EN-US style='font-size:11.0pt;font-family:"Calibri","sans-serif"'>2.</span><span
+style='font-size:11.0pt;font-family:"Microsoft YaHei","sans-serif"'>信息安全，</span><span
+lang=EN-US style='font-size:11.0pt;font-family:"Calibri","sans-serif"'>3.</span><span
+style='font-size:11.0pt;font-family:"Microsoft YaHei","sans-serif"'>安全性，</span><span
+lang=EN-US style='font-size:11.0pt;font-family:"Calibri","sans-serif"'>4.</span><span
+style='font-size:11.0pt;font-family:"Microsoft YaHei","sans-serif"'>可能性，</span><span
+lang=EN-US style='font-size:11.0pt;font-family:"Calibri","sans-serif"'>5.</span><span
+style='font-size:11.0pt;font-family:"Microsoft YaHei","sans-serif"'>可維護性</span><span
+lang=EN-US style='font-size:11.0pt;font-family:"Calibri","sans-serif"'>; </span><span
+style='font-size:11.0pt;font-family:"Microsoft YaHei","sans-serif"'>然而這些決定會存在一定的衝突，所以還是要跟據系統的類型來劃分。</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=EN-US style='font-size:
+11.0pt;font-family:"Microsoft YaHei","sans-serif"'>&nbsp;</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=EN-US style='font-size:
+11.0pt;font-family:"Calibri","sans-serif"'>------------------------------------------------------------------------------------------------------------------------</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span style='font-size:11.0pt;
+font-family:"Microsoft YaHei","sans-serif"'>體系結構視圖</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span style='font-size:11.0pt;
+font-family:"Microsoft YaHei","sans-serif"'>體系結構不可能一張圖解釋完，可以文檔化</span><span
+lang=EN-US style='font-size:11.0pt;font-family:"Calibri","sans-serif"'>;</span><span
+style='font-size:11.0pt;font-family:"Microsoft YaHei","sans-serif"'>由四部份組成：</span><span
+lang=EN-US style='font-size:11.0pt;font-family:"Calibri","sans-serif"'>(</span><span
+style='font-size:11.0pt;font-family:"Microsoft YaHei","sans-serif"'>用<span
+lang=EN-US>UML</span>畫</span><span lang=EN-US style='font-size:11.0pt;
+font-family:"Calibri","sans-serif"'>)</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=EN-US style='font-size:
+11.0pt;font-family:"Calibri","sans-serif"'><img width=245 height=245 id="圖片 7"
+src="txjgsj.files/image002.jpg"
+alt="Krutchen &#10;逻 辑 视 图 &#10;部 署 视 图 &#10;（ Krutchen 1995 ） 在 他 的 著 名 的 &#10;0 &#10;物 理 视 图 &#10;系 统 体 系 结 构 &#10;进 程 视 图 &#10;SHOTON Ml 9SE &#10;． O O &#10;Al TRIPL#AMERA "></span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=EN-US style='font-size:
+11.0pt;font-family:"Calibri","sans-serif"'>&nbsp;</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=EN-US style='font-size:
+11.0pt;font-family:"Calibri","sans-serif"'>------------------------------------------------------------------------------------------------------------------------</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span style='font-size:11.0pt;
+font-family:"Microsoft YaHei","sans-serif"'>體系結構模式</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span style='font-size:11.0pt;
+font-family:"Microsoft YaHei","sans-serif"'>分層體系模式，</span><span lang=EN-US
+style='font-size:11.0pt;font-family:"Calibri","sans-serif"'>MVC</span><span
+style='font-size:11.0pt;font-family:"Microsoft YaHei","sans-serif"'>模式，代理模式等</span><span
+lang=EN-US style='font-size:11.0pt;font-family:"Calibri","sans-serif"'>23</span><span
+style='font-size:11.0pt;font-family:"Microsoft YaHei","sans-serif"'>種模式。</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=EN-US style='font-size:
+11.0pt;font-family:"Microsoft YaHei","sans-serif"'>&nbsp;</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span style='font-size:11.0pt;
+font-family:"Microsoft YaHei","sans-serif"'>分層體系模式：</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span style='font-size:11.0pt;
+font-family:"Microsoft YaHei","sans-serif"'>分離與獨立性是體系結構設計的基礎，使變更被局部化。</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span style='font-size:11.0pt;
+font-family:"Microsoft YaHei","sans-serif"'>每個層級只依賴近鄰的下一層所提供的服務設施。每一個分層都支持增量開發。</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=EN-US style='font-size:
+11.0pt;font-family:"Calibri","sans-serif"'><img width=239 height=239 id="圖片 6"
+src="txjgsj.files/image003.jpg"
+alt="用 户 界 面 &#10;用 户 界 面 管 理 &#10;身 份 认 证 和 授 权 &#10;核 心 业 务 逻 辑 / 应 用 功 能 &#10;系 统 公 用 功 能 &#10;系 统 支 持 （ 操 作 系 统 、 数 据 库 等 ） &#10;图 6 · 8 一 个 通 用 的 分 层 体 系 结 构 &#10;． O O &#10;Al TRIPLE CAMERA "></span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=EN-US style='font-size:
+11.0pt;font-family:"Calibri","sans-serif"'><img width=230 height=230 id="圖片 5"
+src="txjgsj.files/image004.jpg"
+alt="图 6 · 8 &#10;iLearn 应 用 &#10;基 丁 浏 呛 器 的 用 户 界 面 &#10;式 的 4 &#10;配 置 服 务 &#10;身 份 管 理 &#10;应 用 管 理 &#10;群 组 管 理 &#10;应 用 服 务 &#10;系 系 的 一 &#10;消 息 通 信 视 频 会 议 &#10;报 纸 存 档 &#10;电 子 邮 件 &#10;视 频 存 储 &#10;资 源 查 找 &#10;模 拟 &#10;字 处 理 &#10;虚 拟 学 习 环 境 &#10;历 史 存 档 &#10;电 子 表 格 &#10;公 用 服 务 &#10;身 份 认 证 &#10;日 志 和 监 控 &#10;用 户 存 储 &#10;应 用 存 储 &#10;图 60 &#10;iLearn 系 统 的 体 系 结 构 "></span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=EN-US style='font-size:
+11.0pt;font-family:"Calibri","sans-serif"'>&nbsp;</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=EN-US style='font-size:
+11.0pt;font-family:"Microsoft YaHei","sans-serif"'>&nbsp;</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=EN-US style='font-size:
+11.0pt;font-family:"Microsoft YaHei","sans-serif"'>&nbsp;</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span style='font-size:11.0pt;
+font-family:"Microsoft YaHei","sans-serif"'>知識庫體系結構：</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span style='font-size:11.0pt;
+font-family:"Microsoft YaHei","sans-serif"'>說白了就是數據庫共享。</span><span lang=ZH-CN
+style='font-size:11.0pt;font-family:"Microsoft YaHei","sans-serif"'>共用的，沒有分離。</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=EN-US style='font-size:
+11.0pt;font-family:"Calibri","sans-serif"'><img width=404 height=194 id="圖片 4"
+src="txjgsj.files/image005.jpg"
+alt="UML 编 辑 器 &#10;代 码 生 成 器 &#10;Java* 辑 器 &#10;项 目 知 识 库 &#10;设 计 转 换 器 &#10;编 辑 器 &#10;&lt; 3 乥 &lt; 凵 山 凵 一 &#10;也 0 一 乥 NC &#10;报 告 生 成 器 &#10;设 计 分 析 器 "></span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=EN-US style='font-size:
+11.0pt;font-family:"Microsoft YaHei","sans-serif"'>&nbsp;</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span style='font-size:11.0pt;
+font-family:"Microsoft YaHei","sans-serif"'>客戶</span><span lang=EN-US
+style='font-size:11.0pt;font-family:"Calibri","sans-serif"'>---</span><span
+style='font-size:11.0pt;font-family:"Microsoft YaHei","sans-serif"'>服服<span
+lang=EN-US> (C/S B/S)</span>：</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span style='font-size:11.0pt;
+font-family:"Microsoft YaHei","sans-serif"'>客戶端可以經過互聯網去請求服務器（數據庫群）數據。</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=EN-US style='font-size:
+11.0pt;font-family:"Calibri","sans-serif"'><img width=381 height=240 id="圖片 3"
+src="txjgsj.files/image006.jpg"
+alt="客 户 端 1 &#10;目 录 服 务 器 &#10;库 目 录 &#10;图 6 刁 3 &#10;客 户 端 2 &#10;视 频 服 务 器 &#10;电 影 库 &#10;互 联 网 &#10;客 户 端 3 &#10;图 片 服 务 器 &#10;照 片 库 &#10;客 户 端 4 &#10;webhk 务 器 &#10;电 影 和 &#10;照 片 信 息 &#10;一 个 电 影 库 的 客 户 一 服 务 器 体 系 结 构 "></span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=EN-US style='font-size:
+11.0pt;font-family:"Microsoft YaHei","sans-serif"'>&nbsp;</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span style='font-size:11.0pt;
+font-family:"Microsoft YaHei","sans-serif"'>管道和過濾 器體系結構：</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span style='font-size:11.0pt;
+font-family:"Microsoft YaHei","sans-serif"'>適合于嵌入式系統與批處理系統。</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=EN-US style='font-size:
+11.0pt;font-family:"Microsoft YaHei","sans-serif"'>&nbsp;</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=EN-US style='font-size:
+11.0pt;font-family:"Calibri","sans-serif"'>------------------------------------------------------------------------------------------------------------------------</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span style='font-size:11.0pt;
+font-family:"Microsoft YaHei","sans-serif"'>應用體系結構</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span style='font-size:11.0pt;
+font-family:"Microsoft YaHei","sans-serif"'>事務系統：</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span style='font-size:11.0pt;
+font-family:"Microsoft YaHei","sans-serif"'>數據一致性高，容錯低的系統。 例如銀行系統。經過事務體系去保證數據的完整性</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=EN-US style='font-size:
+11.0pt;font-family:"Calibri","sans-serif"'><img width=532 height=236 id="圖片 2"
+src="txjgsj.files/image007.png"
+alt="计算机生成了可选文字:&#10;处理&#10;打印明细&#10;查询户&#10;返回卡&#10;更新账户&#10;「迅择务&#10;叶钞&#10;ATM"></span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=EN-US style='font-size:
+11.0pt;font-family:"Microsoft YaHei","sans-serif"'>&nbsp;</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=EN-US style='font-size:
+11.0pt;font-family:"Microsoft YaHei","sans-serif"'>&nbsp;</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=ZH-CN style='font-size:
+11.0pt;font-family:"Microsoft YaHei","sans-serif"'>信息化系統：</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=EN-US style='font-size:
+11.0pt;font-family:"Calibri","sans-serif"'><img width=575 height=238 id="圖片 1"
+src="txjgsj.files/image008.jpg"
+alt="用 户 界 面 &#10;Web 浏 嵬 器 &#10;用 尸 通 信 &#10;认 证 和 授 权 &#10;登 录 &#10;信 息 &#10;安 全 管 理 &#10;角 色 检 查 &#10;病 人 信 息 &#10;管 理 器 &#10;表 单 和 菜 &#10;数 据 确 认 &#10;单 管 理 器 &#10;数 据 导 人 &#10;和 导 出 &#10;图 6 辑 8 &#10;信 息 检 索 和 修 改 &#10;事 务 管 理 数 据 库 &#10;体 系 结 构 &#10;事 务 管 理 病 人 数 据 库 &#10;图 6 一 四 Mentcare 系 统 的 体 系 结 构 "></span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=EN-US style='font-size:
+11.0pt;font-family:"Microsoft YaHei","sans-serif"'>&nbsp;</span></p>
+
+<p style='margin:0cm;margin-bottom:.0001pt'><span lang=ZH-CN style='font-size:
+11.0pt;font-family:"Microsoft YaHei","sans-serif"'>語言處理系統：</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+</div>
+
+</body>
+
+</html>

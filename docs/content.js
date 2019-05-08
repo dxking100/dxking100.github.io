@@ -84,5 +84,19 @@ var content = [
 		"content":"",
 		"url":"file/xtjm.htm",
 		"date":"2019-4-15"
+	},{
+		"id": 13,
+		"tid":9,
+		"name": "設計和實現",
+		"content":"",
+		"url":"file/sjhsx.htm",
+		"date":"2019-5-8"
+	},{
+		"id": 14,
+		"tid":9,
+		"name": "體系結構設計",
+		"content":"",
+		"url":"file/txjgsj.htm",
+		"date":"2019-5-8"
 	}
 ];
