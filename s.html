@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>簡單的按鈕功能頁面</title>
+    <style>
+        body {
+            background-color: #baf9d6;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #content {
+            font-size: 30vmin;
+            color: rgb(245, 166, 47);
+            text-shadow: 
+                2px 2px 0 white,
+                -2px -2px 0 white,
+                2px -2px 0 white,
+                -2px 2px 0 white;
+        }
+        span {
+            display: inline-block;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div id="content"></div>
+    <br>
+    <button id="prev">上一個</button>
+    <button id="next">下一個</button>
+    <button id="random">隨機</button>
+    <br>
+    <button id="english">英語</button>
+    <button id="sentence">句子</button>
+    <button id="speak">發音</button>
+
+    <script>
+        let canPress = true; // 状态变量，控制是否能再次按键
+        $(document).ready(function() {
+            var isChinese = false;
+            var isHide = false;
+
+            const sentenceItems = [
+                "Where is(are) the ______?",
+                "The ____ is in the _____"
+            ];
+            const englishItems = [
+                "microwave", "oven", "cooker", "stove", "sink", 
+                "tap", "fridge", "cabinet", "blender", "dishwasher", 
+                "toe"
+            ];
+            let items = englishItems;
+            let currentIndex = 0;
+
+            function hideRandomCharacters(str) {
+                if (str.length < 2) return str;
+                const chars = str.split('');
+                const indicesToHide = new Set();
+                while (indicesToHide.size < chars.length - 2) {
+                    const randomIndex = Math.floor(Math.random() * chars.length);
+                    indicesToHide.add(randomIndex);
+                }
+                for (let i = 0; i < chars.length; i++) {
+                    if (indicesToHide.has(i)) {
+                        chars[i] = '*';
+                    }
+                }
+                return chars.join('');
+            }
+
+            function getColoredText(word) {
+                const colors = [
+                    "#FF6347", // 番茄紅
+                    "#4682B4", // 鋼藍
+                    "#32CD32", // 石灰綠
+                    "#FFD700", // 金色
+                    "#6A5ACD"  // 灰藍色
+                ];
+                
+                return word.split('').map(char => {
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    return `<span style="color: ${color};">${char}</span>`;
+                }).join('');
+            }
+
+            function updateContent() {
+                const currentItem = items[currentIndex];
+                const displayText = isHide ? hideRandomCharacters(currentItem) : currentItem;
+                // $("#content").html(getColoredText(displayText));
+                $("#content").html(displayText);
+            }
+
+            function randomColor() {
+                const backgroundColors = [
+                    "#ADD8E6", // 淺藍色
+                    "#FFE4B5", // 米色
+                    "#D3FFCE", // 淺綠色
+                    "#FFB6C1", // 淺粉色
+                    "#FFDEAD"  // 酪梨色
+                ];
+                // const bgColor = backgroundColors[Math.floor(Math.random() * backgroundColors.length)];
+                // $("body").css("background-color", bgColor);
+            }
+
+            $("#prev").click(function() {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    updateContent();
+                    randomColor();
+                }
+            });
+
+            $("#next").click(function() {
+                if (currentIndex < items.length - 1) {
+                    currentIndex++;
+                    updateContent();
+                    randomColor();
+                }
+            });
+
+            $("#random").click(function() {
+                items.sort(() => Math.random() - 0.5);
+                currentIndex = 0;
+                updateContent();
+                randomColor();
+            });
+
+            $("#sentence").click(function() {
+                items = sentenceItems;
+                currentIndex = 0;
+                updateContent();
+                isChinese = false;
+                randomColor();
+            });
+
+            $("#english").click(function() {
+                items = englishItems;
+                currentIndex = 0;
+                updateContent();
+                isChinese = false;
+                randomColor();
+            });
+
+            $("#speak").click(function() {
+                const utterance = new SpeechSynthesisUtterance(items[currentIndex]);
+                utterance.lang = isChinese ? 'zh-HK' : 'en-US';
+                speechSynthesis.speak(utterance);
+            });
+
+            updateContent();
+        });
+
+        window.addEventListener('keydown', function(event) {
+            switch (event.key) {
+                case 'ArrowUp':
+                    handleKeyPress('english');
+                    break;
+                case 'ArrowDown':
+                    handleKeyPress('speak');
+                    break;
+                case 'ArrowLeft':
+                    handleKeyPress('prev');
+                    break;
+                case 'ArrowRight':
+                    handleKeyPress('next');
+                    break;
+            }
+        });
+
+        function handleKeyPress(direction) {
+            if (canPress) {
+                canPress = false;
+                document.getElementById(direction).click();
+                setTimeout(() => {
+                    canPress = true;
+                }, 800);
+            }
+        }
+    </script>
+</body>
+</html>
