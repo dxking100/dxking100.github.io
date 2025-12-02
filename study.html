@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>信息頁面</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* 调整选择框的大小 */
+        .form-select {
+            height: 50px; /* 更高的选择框 */
+            font-size: 1.25rem; /* 更大的字体 */
+        }
+
+        .full-height {
+            height: 50vh;  /* 50% 的視口高度 */
+        }
+        .rounded-btn {
+            border-radius: 20px; /* 圓角設置 */
+            font-size: 10rem; /* 字體大小，根據需要調整 */
+        }
+        .active {
+            background-color: rgb(245, 166, 47) !important; /* 選中後變成綠色 */
+            color: white; /* 文字顏色為白色 */
+        }
+
+        #optionSelect {
+            border-radius: 20px;
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 版权信息 -->
+<header class="text-center p-3 d-flex justify-content-between align-items-center" style="background-color: rgb(245, 166, 47);">
+    <div class="d-flex align-items-center" >
+        <select id="optionSelect" class="form-select me-2" aria-label="選擇選項">
+            <option value="2">K2</option>
+            <option value="3">K3</option>
+        </select>
+    </div>
+    <p class="mb-0">© 2025 Duideduo. 版權所有。</p>
+</header>
+
+<div class="container mt-5">
+    <br/>
+    <br/>
+    <br/>
+    <div class="row">
+        <div class="col-6">
+            <button id="btn1" class="btn btn-secondary btn-block full-height rounded-btn">中</button>
+        </div>
+        <div class="col-6">
+            <button id="btn2" class="btn btn-secondary btn-block full-height rounded-btn">英</button>
+        </div>
+    </div>
+
+    <hr>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    // 點擊事件處理
+    $('#btn1').click(function() {
+        $(this).toggleClass('active');
+        $('#btn2').removeClass('active'); // 確保另一個按鈕不會被選中
+        jump();
+    });
+
+    $('#btn2').click(function() {
+        $(this).toggleClass('active');
+        $('#btn1').removeClass('active'); // 確保另一個按鈕不會被選中
+        jump();
+        
+    });
+
+    //跳轉
+    function jump(){
+        const selectValue = $('#optionSelect').val(); // 獲取選擇框的值
+        const languageValue = $('#btn1').hasClass('active') ? '中' : '英'; // 獲取選中的語言
+
+        // 這裡可以根據需要將選擇的值作為URL參數
+    const url = `result.html?selectValue=${selectValue}&languageValue=${languageValue}`;
+
+    // 跳轉到指定的頁面
+    window.location.href = url; 
+    }
+</script>
+
+</body>
+</html>
