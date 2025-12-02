@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>信息頁面</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* 调整选择框的大小 */
+        .form-select {
+            height: 50px; /* 更高的选择框 */
+            font-size: 1.25rem; /* 更大的字体 */
+        }
+
+        .full-height {
+            height: 50vh;  /* 50% 的視口高度 */
+        }
+        .rounded-btn {
+            border-radius: 20px; /* 圓角設置 */
+            font-size: 5rem; /* 字體大小，根據需要調整 */
+        }
+        .active {
+            background-color: #28a745 !important; /* 選中後變成綠色 */
+            color: white; /* 文字顏色為白色 */
+        }
+
+        #content {
+            font-size: 30vmin;
+            color: rgb(245, 166, 47);
+        }
+    </style>
+</head>
+<body>
+
+<!-- 版权信息 -->
+<header class=" text-center p-3 d-flex justify-content-between align-items-center" style="background-color: rgb(245, 166, 47);">
+    <div class="d-flex align-items-center">
+        <button id="back" class="btn btn-secondary btn-block">《&nbsp;&nbsp;&nbsp;</button>
+    </div>
+    <p class="mb-0">© 2025 Duideduo. 版權所有。</p>
+</header>
+
+<div class="mt-5">
+    <div class="row">
+        <div class="col-12">
+            <div id="content" class="text-center">MicroWave</div>
+        </div>
+    </div>
+    <hr>
+</div>
+
+<!-- Footer -->
+<footer class="bg-light text-center p-3">
+    <div class="row text-center">
+        <div class="col">
+            <button id="prev" class="btn btn-secondary rounded-btn">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;《&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;</button>
+        </div>
+        <div class="col">
+            <button id="playAudio" class="btn btn-secondary rounded-btn">
+                <i class="fas fa-volume-up" style="width: 100px;"></i>
+            </button>
+        </div>
+        <div class="col">
+            <button id="next" class="btn btn-secondary rounded-btn">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;》&nbsp;&nbsp;&nbsp;&nbsp;</button>
+        </div>
+    </div>
+</footer>
+
+
+<audio id="audio" src="your-audio-file.mp3"></audio> <!-- 替換為實際音頻文件路徑 -->
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+
+    // 获取当前页面的 URL
+    const queryString = window.location.search;
+
+    // 创建一个 URLSearchParams 对象以读取参数
+    const urlParams = new URLSearchParams(queryString);
+
+    // 获取参数的值
+    const selectValue = urlParams.get('selectValue');
+    const languageValue = urlParams.get('languageValue');
+
+    let isChinese = false;
+
+    let k2_eng=[];
+    let k2_chg=[];
+    let k3_eng=[
+                "microwave", "oven", "cooker", "stove", "sink", 
+                "tap", "fridge", "cabinet", "blender", "dishwasher"
+            ];
+    let k3_chg=[];
+
+    let items = [];
+    if(selectValue ==='2' && languageValue==='英'){
+        items = k2_eng;
+        isChinese = false;
+    }else  if(selectValue ==='2' && languageValue==='中'){
+        items = k2_chg;
+        isChinese = true;
+    }else if(selectValue ==='3' && languageValue==='英'){
+        items = k3_eng;
+        isChinese = false;
+    }else  if(selectValue ==='3' && languageValue==='中'){
+        items = k3_chg;
+        isChinese = true;
+    }
+    let currentIndex = 0;
+    
+
+
+    function updateContent() {
+        const currentItem = items[currentIndex];
+        $("#content").fadeOut();
+        $("#content").html(currentItem);
+        $("#content").fadeIn();
+
+    }
+
+    $("#prev").click(function() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateContent();
+        }
+    });
+
+    $("#next").click(function() {
+        if (currentIndex < items.length - 1) {
+            currentIndex++;
+            updateContent();
+        }
+    });
+
+    // 返回上一個頁面
+    $('#back').click(function() {
+        window.history.back();
+    });
+
+    // 播放音頻
+    $("#playAudio").click(function() {
+        const utterance = new SpeechSynthesisUtterance(items[currentIndex]);
+        utterance.lang = isChinese ? 'zh-HK' : 'en-US';
+        speechSynthesis.speak(utterance);
+    });
+</script>
+
+</body>
+</html>
