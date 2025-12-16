@@ -81,6 +81,11 @@
 
     let isChinese = false;
 
+    let level1_eng = ["microwave", "oven", "cooker", "stove", "sink", 
+                "tap", "fridge", "cabinet", "blender", "dishwasher","coloured pencil","highlighter","paper clip","stapler","rubber","scissors","tape","glue stick"];
+    
+    let level2_eng = ["spring","summer","autumn","winter","rainy","sunny","windy","snowy","snow","snowball","snowman","hat","scarf","button","snowflake","icicle","sleigh","santa claus","reindeer","christmas tree","stocking","present","chimney","fireplace"];
+
     let k2_eng=["sun",
     "sad",
     "snake",
@@ -225,8 +230,7 @@
     "camera",
     "computer",
     "smartphone",
-    "telephone","microwave", "oven", "cooker", "stove", "sink", 
-                "tap", "fridge", "cabinet", "blender", "dishwasher"
+    "telephone"
             ];
     let k3_chg=["快樂",
     "生氣",
@@ -313,6 +317,12 @@
     }else  if(selectValue ==='3' && languageValue==='中'){
         items = k3_chg;
         isChinese = true;
+    }else if(selectValue ==='4' && languageValue==='英'){
+        items = level1_eng;
+        isChinese = false;
+    }else  if(selectValue ==='5' && languageValue==='英'){
+        items = level2_eng;
+        isChinese = false;
     }
     let currentIndex = 0;
     
