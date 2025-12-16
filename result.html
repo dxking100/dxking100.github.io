@@ -332,10 +332,26 @@
     function updateContent() {
         const currentItem = items[currentIndex];
         $("#content").fadeOut();
-        $("#content").html(currentItem);
+        // $("#content").html(currentItem);
+        const syllables = getSyllables(currentItem);
+        const colors = ['#f5a62f', '#875c1b'];
+        const resultDiv = document.getElementById('content');
+        resultDiv.innerHTML = ''; // 清空之前的結果
+        syllables.forEach((syllable, index) => {
+            const span = document.createElement('span');
+            span.textContent = syllable;
+            span.className = 'syllable';
+            span.style.color = colors[index % colors.length]; // 設置顏色
+            resultDiv.appendChild(span);
+        });
+        
         $("#content").fadeIn();
-
     }
+
+    function getSyllables(word) {
+            // 簡單的音節拆分規則，可以根據需求進行擴展
+            return word.match(/[^aeiou]*[aeiou]+[^aeiou]*/gi) || [];
+        }
 
     $("#prev").click(function() {
         if (currentIndex > 0) {
