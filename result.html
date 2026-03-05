@@ -333,19 +333,25 @@
     function updateContent() {
         const currentItem = items[currentIndex];
         $("#content").fadeOut();
-        // $("#content").html(currentItem);
-        const syllables = getSyllables(currentItem);
-        const colors = ['#f5a62f', '#000000'];
         const resultDiv = document.getElementById('content');
         resultDiv.innerHTML = ''; // 清空之前的結果
-        syllables.forEach((syllable, index) => {
-            const span = document.createElement('span');
-            span.textContent = syllable;
-            span.className = 'syllable';
-            span.style.color = colors[index % colors.length]; // 設置顏色
-            resultDiv.appendChild(span);
-        });
-        
+    
+        // 检查是否有中文字符
+        if (/[\u4e00-\u9fa5]/.test(currentItem)) {
+            // 直接将值放入resultDiv
+            resultDiv.textContent = currentItem;
+        } else {
+            const syllables = getSyllables(currentItem);
+            const colors = ['#f5a62f', '#000000'];
+            syllables.forEach((syllable, index) => {
+                const span = document.createElement('span');
+                span.textContent = syllable;
+                span.className = 'syllable';
+                span.style.color = colors[index % colors.length]; // 設置顏色
+                resultDiv.appendChild(span);
+            });
+        }
+
         $("#content").fadeIn();
     }
 
