@@ -3,88 +3,309 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>快樂學習吧！🎈</title>
     <style>
-        /* 設置 body 和 html 的高度以使 footer 貼緊底部 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         html, body {
             height: 100%;
+            font-family: 'Comic Sans MS', 'YouYuan', cursive, sans-serif;
         }
 
-        /* 使用 Flexbox 使內容區域佔滿剩餘空間 */
-        .d-flex {
-            min-height: 100vh;
-            flex-direction: column;
+        body {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            position: relative;
+            overflow: hidden;
         }
 
-        main {
+        /* 背景裝飾 - 漂浮的氣泡 */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(255, 183, 178, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 218, 185, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 224, 178, 0.3) 0%, transparent 50%);
+            animation: floatBg 15s ease-in-out infinite;
+        }
+
+        @keyframes floatBg {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* 漂浮的星星 */
+        .star {
+            position: absolute;
+            font-size: 2rem;
+            animation: twinkle 2s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 頭部區域 */
+        header {
+            text-align: center;
+            padding: 25px 20px;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            border-radius: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(255, 154, 158, 0.4);
+            border: 5px solid #fff;
+        }
+
+        .title {
+            font-size: 2em;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            margin-bottom: 15px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .grade-selector {
+            background: white;
+            border: 4px solid #ff9a9e;
+            border-radius: 25px;
+            padding: 12px 25px;
+            font-size: 1.2em;
+            font-family: inherit;
+            font-weight: bold;
+            color: #ff6b6b;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .grade-selector:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 154, 158, 0.4);
+        }
+
+        .grade-selector:focus {
+            border-color: #feca57;
+            box-shadow: 0 0 20px rgba(254, 202, 87, 0.5);
+        }
+
+        /* 按鈕區域 */
+        .button-area {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .language-btn {
             flex: 1;
+            max-width: 200px;
+            height: 200px;
+            border: none;
+            border-radius: 30px;
+            font-size: 5em;
+            font-family: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
+        .btn-chinese {
+            background: linear-gradient(135deg, #a8e6cf 0%, #88d8b0 100%);
+            color: #1e5631;
+            border: 5px solid #fff;
+        }
 
-        .rounded-btn {
-            border-radius: 20px; /* 圓角設置 */
-            font-size: 10rem; /* 字體大小，根據需要調整 */
+        .btn-english {
+            background: linear-gradient(135deg, #89c4f4 0%, #6bb3e0 100%);
+            color: #1a3c5e;
+            border: 5px solid #fff;
+        }
+
+        .language-btn:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .language-btn:active {
+            transform: translateY(-5px) scale(1.02);
+        }
+
+        .language-btn.active {
+            animation: pulse 0.5s ease;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.8);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .btn-chinese.active {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+        }
+
+        .btn-english.active {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+        }
+
+        /* 按鈕上的小裝飾 */
+        .btn-decoration {
+            position: absolute;
+            font-size: 1.5rem;
+            opacity: 0.6;
+        }
+
+        .btn-chinese .btn-decoration {
+            top: 10px;
+            right: 10px;
+        }
+
+        .btn-english .btn-decoration {
+            top: 10px;
+            right: 10px;
+        }
+
+        /* 提示文字 */
+        .hint {
+            text-align: center;
+            color: #ff6b6b;
+            font-size: 1.3em;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+            animation: wiggle 2s ease-in-out infinite;
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-3deg); }
+            50% { transform: rotate(3deg); }
+        }
+
+        /* 頁尾 */
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #fff;
+            font-size: 0.9em;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            .button-area {
+                flex-direction: column;
+                align-items: center;
+            }
+            .language-btn {
+                max-width: 100%;
+                height: 150px;
+                font-size: 4em;
+            }
+            .title {
+                font-size: 1.5em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .language-btn {
+                height: 120px;
+                font-size: 3em;
+            }
+            .grade-selector {
+                font-size: 1em;
+                padding: 10px 20px;
+            }
         }
     </style>
-    <title>Bootstrap 頁面範例</title>
 </head>
-<body class="d-flex flex-column">
+<body>
+    <!-- 背景星星裝飾 -->
+    <div class="star" style="top: 10%; left: 10%;">⭐</div>
+    <div class="star" style="top: 20%; right: 15%; animation-delay: 0.5s;">🌟</div>
+    <div class="star" style="top: 60%; left: 20%; animation-delay: 1s;">⭐</div>
+    <div class="star" style="top: 80%; right: 10%; animation-delay: 1.5s;">🌟</div>
+    <div class="star" style="top: 40%; right: 30%; animation-delay: 0.3s;">⭐</div>
 
-    <!-- 頭部 -->
-    <header class="bg-primary text-white text-center py-3">
-        <select id="optionSelect" class="form-select me-2" style="width: 100px;" aria-label="選擇選項">
-            <option value="2">K2</option>
-            <option value="3">K3</option>
-            <option value="4">Level1</option>
-            <option value="5">Level2</option>
-        </select>
-    <p class="mb-0">© 2025 Duideduo. 版權所有。</p>
-    </header>
+    <div class="container">
+        <!-- 頭部區域 -->
+        <header>
+            <h1 class="title">🎈 快樂學習吧！ 🎈</h1>
+            <select id="optionSelect" class="grade-selector" aria-label="選擇年級">
+                <option value="2">🌸 K2</option>
+                <option value="3">🌺 K3</option>
+                <option value="4">🌻 Level 1</option>
+                <option value="5">🌼 Level 2</option>
+            </select>
+        </header>
 
-    <!-- 中部 -->
-    <main class="container my-4">
-        <div class="row">
-        <div class="col-6">
-            <button id="btn1" class="btn btn-secondary btn-block full-height rounded-btn">中</button>
-        </div>
-        <div class="col-6">
-            <button id="btn2" class="btn btn-secondary btn-block full-height rounded-btn">英</button>
-        </div>
+        <!-- 按鈕區域 -->
+        <main>
+            <div class="button-area">
+                <button id="btn1" class="language-btn btn-chinese">
+                    中
+                    <span class="btn-decoration">🐼</span>
+                </button>
+                <button id="btn2" class="language-btn btn-english">
+                    英
+                    <span class="btn-decoration">🦁</span>
+                </button>
+            </div>
+
+            <p class="hint">🎯 選擇一個按鈕開始學習吧！ 🎯</p>
+        </main>
+
+        <!-- 頁尾 -->
+        <footer>
+            <p>© 2025 Duideduo. 版權所有。 ❤️</p>
+        </footer>
     </div>
-    </main>
-    
-
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
         // 點擊事件處理
-    $('#btn1').click(function() {
-        $(this).toggleClass('active');
-        $('#btn2').removeClass('active'); // 確保另一個按鈕不會被選中
-        jump();
-    });
+        document.getElementById('btn1').addEventListener('click', function() {
+            this.classList.toggle('active');
+            document.getElementById('btn2').classList.remove('active');
+            jump();
+        });
 
-    $('#btn2').click(function() {
-        $(this).toggleClass('active');
-        $('#btn1').removeClass('active'); // 確保另一個按鈕不會被選中
-        jump();
-        
-    });
+        document.getElementById('btn2').addEventListener('click', function() {
+            this.classList.toggle('active');
+            document.getElementById('btn1').classList.remove('active');
+            jump();
+        });
 
-    //跳轉
-    function jump(){
-        const selectValue = $('#optionSelect').val(); // 獲取選擇框的值
-        const languageValue = $('#btn1').hasClass('active') ? '中' : '英'; // 獲取選中的語言
+        // 跳轉
+        function jump(){
+            const selectValue = document.getElementById('optionSelect').value;
+            const languageValue = document.getElementById('btn1').classList.contains('active') ? '中' : '英';
 
-        // 這裡可以根據需要將選擇的值作為URL參數
-    const url = `result.html?selectValue=${selectValue}&languageValue=${languageValue}`;
-
-    // 跳轉到指定的頁面
-    window.location.href = url; 
-    }
+            const url = `result.html?selectValue=${selectValue}&languageValue=${languageValue}`;
+            window.location.href = url;
+        }
     </script>
 </body>
 </html>
