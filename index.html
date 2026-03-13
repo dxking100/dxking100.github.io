@@ -388,8 +388,7 @@
         <div class="main-content">
             <div class="left-panel">
                 <div class="mode-selector">
-                    <button class="mode-btn active" id="modeLearnEn" onclick="setMode('learnEn')">背英文</button>
-                    <button class="mode-btn" id="modeLearnZh" onclick="setMode('learnZh')">背中文</button>
+                    <button class="mode-btn active" id="modeLearnEn">背英文</button>
                 </div>
                 
                 <div class="word-card" id="wordCard" onclick="toggleHint()">
@@ -397,7 +396,7 @@
                     <div class="hint-word" id="hintWord">熊貓</div>
                 </div>
 
-                <p class="hint" id="hintText">點擊卡片或按空格鍵顯示答案</p>
+                <p class="hint">點擊卡片或按空格鍵顯示中文答案</p>
             </div>
 
             <div class="right-panel">
@@ -416,8 +415,8 @@
     </div>
 
     <script>
-        // 英文單字庫（背英文模式）
-        const englishWords = [
+        // 英文單字庫
+        const words = [
             { word: "Panda", hint: "熊貓" },
             { word: "Colour", hint: "顏色" },
             { word: "Elephant", hint: "大象" },
@@ -425,42 +424,11 @@
             { word: "Delicious", hint: "美味的" }
         ];
 
-        // 中文單字庫（背中文模式）
-        const chineseWords = [
-            { word: "熊貓", hint: "Panda" },
-            { word: "顏色", hint: "Colour" },
-            { word: "快樂", hint: "Happy" },
-            { word: "朋友", hint: "Friend" },
-            { word: "學校", hint: "School" }
-        ];
-
         let currentIndex = 0;
         let stars = 3;
-        let currentMode = 'learnEn';
-        let isHintShown = false;
-        let currentWords = englishWords;
-
-        function setMode(mode) {
-            currentMode = mode;
-            document.getElementById('modeLearnEn').classList.toggle('active', mode === 'learnEn');
-            document.getElementById('modeLearnZh').classList.toggle('active', mode === 'learnZh');
-            
-            // 切換單字庫
-            if (mode === 'learnEn') {
-                currentWords = englishWords;
-                document.getElementById('hintText').textContent = '點擊卡片或按空格鍵顯示中文答案';
-            } else if (mode === 'learnZh') {
-                currentWords = chineseWords;
-                document.getElementById('hintText').textContent = '點擊卡片或按空格鍵顯示英文答案';
-            }
-            
-            currentIndex = 0;
-            isHintShown = false;
-            loadWord();
-        }
 
         function loadWord() {
-            const word = currentWords[currentIndex];
+            const word = words[currentIndex];
             const mainWordEl = document.getElementById('mainWord');
             const hintWordEl = document.getElementById('hintWord');
             
@@ -472,7 +440,7 @@
             
             document.getElementById('wordCard').classList.remove('show-hint');
             document.getElementById('currentNum').textContent = currentIndex + 1;
-            document.getElementById('totalNum').textContent = currentWords.length;
+            document.getElementById('totalNum').textContent = words.length;
             
             mainWordEl.style.animation = 'none';
             mainWordEl.offsetHeight;
@@ -486,7 +454,7 @@
         }
 
         function nextWord() {
-            currentIndex = (currentIndex + 1) % currentWords.length;
+            currentIndex = (currentIndex + 1) % words.length;
             isHintShown = false;
             loadWord();
             
@@ -503,16 +471,11 @@
         }
 
         function speakWord() {
-            const word = currentWords[currentIndex].word;
+            const word = words[currentIndex].word;
             
             if ('speechSynthesis' in window) {
                 const utterance = new SpeechSynthesisUtterance(word);
-                // 根據模式選擇發音語言
-                if (currentMode === 'learnEn') {
-                    utterance.lang = 'en-US';
-                } else if (currentMode === 'learnZh') {
-                    utterance.lang = 'zh-CN';
-                }
+                utterance.lang = 'en-US';
                 utterance.rate = 0.8;
                 utterance.pitch = 1.1;
                 window.speechSynthesis.speak(utterance);
