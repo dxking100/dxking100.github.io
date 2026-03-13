@@ -139,23 +139,6 @@
             letter-spacing: 5px;
         }
 
-        .hint-word {
-            font-size: 2em;
-            color: #e74c3c;
-            display: none;
-            font-weight: bold;
-            animation: popIn 0.4s ease;
-        }
-
-        .word-card.show-hint .hint-word {
-            display: block;
-        }
-
-        @keyframes popIn {
-            0% { transform: scale(0); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
         @keyframes wordPop {
             0% { transform: scale(0.8); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
@@ -391,23 +374,19 @@
                     <button class="mode-btn active" id="modeLearnEn">背英文</button>
                 </div>
                 
-                <div class="word-card" id="wordCard" onclick="toggleHint()">
+                <div class="word-card" id="wordCard">
                     <div class="main-word" id="mainWord">Panda</div>
-                    <div class="hint-word" id="hintWord">熊貓</div>
                 </div>
-
-                <p class="hint">點擊卡片或按空格鍵顯示中文答案</p>
             </div>
 
             <div class="right-panel">
                 <div class="btn-group">
-                    <button class="btn btn-check" onclick="toggleHint()">查看答案</button>
                     <button class="btn btn-speak" onclick="speakWord()">發音</button>
                     <button class="btn btn-next" onclick="nextWord()">下一個</button>
                 </div>
 
                 <div class="progress">
-                    <div class="progress-text">進度：<span id="currentNum">1</span> / <span id="totalNum">3</span></div>
+                    <div class="progress-text">進度：<span id="currentNum">1</span> / <span id="totalNum">5</span></div>
                     <div class="stars" id="stars">⭐⭐⭐</div>
                 </div>
             </div>
@@ -430,15 +409,11 @@
         function loadWord() {
             const word = words[currentIndex];
             const mainWordEl = document.getElementById('mainWord');
-            const hintWordEl = document.getElementById('hintWord');
             
             // 直接顯示完整單字
             mainWordEl.textContent = word.word;
             mainWordEl.style.color = '#1e5631';
-            hintWordEl.textContent = word.hint;
-            hintWordEl.style.color = '#e74c3c';
             
-            document.getElementById('wordCard').classList.remove('show-hint');
             document.getElementById('currentNum').textContent = currentIndex + 1;
             document.getElementById('totalNum').textContent = words.length;
             
@@ -447,15 +422,8 @@
             mainWordEl.style.animation = 'wordPop 0.5s ease';
         }
 
-        function toggleHint() {
-            // 只顯示/隱藏提示
-            const wordCard = document.getElementById('wordCard');
-            wordCard.classList.toggle('show-hint');
-        }
-
         function nextWord() {
             currentIndex = (currentIndex + 1) % words.length;
-            isHintShown = false;
             loadWord();
             
             stars = Math.floor(Math.random() * 3) + 1;
@@ -501,10 +469,7 @@
         }
 
         document.addEventListener('keydown', function(e) {
-            if (e.code === 'Space') {
-                e.preventDefault();
-                toggleHint();
-            } else if (e.code === 'ArrowRight') {
+            if (e.code === 'ArrowRight') {
                 nextWord();
             } else if (e.code === 'KeyP') {
                 speakWord();
