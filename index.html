@@ -448,10 +448,10 @@
             // 切換單字庫
             if (mode === 'learnEn') {
                 currentWords = englishWords;
-                document.getElementById('hintText').textContent = '點擊卡片或按空格鍵顯示中文提示';
+                document.getElementById('hintText').textContent = '點擊卡片或按空格鍵顯示中文答案';
             } else if (mode === 'learnZh') {
                 currentWords = chineseWords;
-                document.getElementById('hintText').textContent = '點擊卡片或按空格鍵顯示英文提示';
+                document.getElementById('hintText').textContent = '點擊卡片或按空格鍵顯示英文答案';
             }
             
             currentIndex = 0;
@@ -484,8 +484,8 @@
             const mainWordEl = document.getElementById('mainWord');
             const hintWordEl = document.getElementById('hintWord');
             
-            // 顯示隱藏單字（部分字母/筆畫）
-            mainWordEl.textContent = hideWord(word.word);
+            // 直接顯示完整單字
+            mainWordEl.textContent = word.word;
             mainWordEl.style.color = '#1e5631';
             hintWordEl.textContent = word.hint;
             hintWordEl.style.color = '#e74c3c';
@@ -500,18 +500,9 @@
         }
 
         function toggleHint() {
-            isHintShown = !isHintShown;
+            // 只顯示/隱藏提示
             const wordCard = document.getElementById('wordCard');
-            const mainWordEl = document.getElementById('mainWord');
-            const word = currentWords[currentIndex];
-            
-            if (isHintShown) {
-                wordCard.classList.add('show-hint');
-                mainWordEl.textContent = word.word;
-            } else {
-                wordCard.classList.remove('show-hint');
-                mainWordEl.textContent = hideWord(word.word);
-            }
+            wordCard.classList.toggle('show-hint');
         }
 
         function nextWord() {
