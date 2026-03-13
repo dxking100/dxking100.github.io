@@ -459,26 +459,6 @@
             loadWord();
         }
 
-        function hideWord(word) {
-            if (word.length <= 2) {
-                return '_ '.repeat(word.length).trim();
-            }
-            const showCount = Math.min(Math.floor(Math.random() * 2) + 1, word.length);
-            const indices = new Set();
-            while (indices.size < showCount) {
-                indices.add(Math.floor(Math.random() * word.length));
-            }
-            let result = '';
-            for (let i = 0; i < word.length; i++) {
-                if (indices.has(i)) {
-                    result += word[i] + ' ';
-                } else {
-                    result += '_ ';
-                }
-            }
-            return result.trim();
-        }
-
         function loadWord() {
             const word = currentWords[currentIndex];
             const mainWordEl = document.getElementById('mainWord');
