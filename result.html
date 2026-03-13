@@ -147,17 +147,6 @@
             100% { transform: scale(1); opacity: 1; }
         }
 
-        .syllable {
-            display: inline-block;
-            margin: 0 5px;
-            animation: syllablePop 0.3s ease;
-        }
-
-        @keyframes syllablePop {
-            0% { transform: scale(0); }
-            100% { transform: scale(1); }
-        }
-
         /* 底部按鈕區域 */
         footer {
             background: linear-gradient(135deg, #a8e6cf 0%, #88d8b0 100%);
@@ -478,25 +467,8 @@
             contentDiv.offsetHeight; // 觸發重繪
             contentDiv.style.animation = 'contentPop 0.5s ease';
             
-            contentDiv.innerHTML = '';
-            
-            if (isChinese) {
-                contentDiv.textContent = currentItem;
-            } else {
-                const syllables = getSyllables(currentItem);
-                const colors = ['#f5a62f', '#1e5631'];
-                syllables.forEach((syllable, index) => {
-                    const span = document.createElement('span');
-                    span.textContent = syllable;
-                    span.className = 'syllable';
-                    span.style.color = colors[index % colors.length];
-                    contentDiv.appendChild(span);
-                });
-            }
-        }
-
-        function getSyllables(word) {
-            return word.match(/[^aeiou]*[aeiou]+[^aeiou]*/gi) || [];
+            // 直接顯示完整單字
+            contentDiv.textContent = currentItem;
         }
 
         document.getElementById('prev').addEventListener('click', function() {
