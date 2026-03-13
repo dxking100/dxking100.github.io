@@ -3,389 +3,549 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>信息頁1</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>快樂學習！🎈</title>
     <style>
-       /* 設置 body 和 html 的高度以使 footer 貼緊底部 */
-        html, body {
-            height: 100%;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        /* 使用 Flexbox 使內容區域佔滿剩餘空間 */
-        .d-flex {
-            min-height: 100vh;
+        html, body {
+            height: 100%;
+            font-family: 'Comic Sans MS', 'YouYuan', cursive, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 背景裝飾 */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(255, 183, 178, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 218, 185, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 224, 178, 0.3) 0%, transparent 50%);
+            animation: floatBg 15s ease-in-out infinite;
+        }
+
+        @keyframes floatBg {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* 漂浮星星 */
+        .star {
+            position: absolute;
+            font-size: 2rem;
+            animation: twinkle 2s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            display: flex;
             flex-direction: column;
         }
 
+        /* 頭部區域 */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            border-radius: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(255, 154, 158, 0.4);
+            border: 4px solid #fff;
+        }
+
+        .back-btn {
+            background: linear-gradient(135deg, #a8e6cf 0%, #88d8b0 100%);
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            font-size: 1em;
+            font-family: inherit;
+            font-weight: bold;
+            color: #1e5631;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(168, 230, 207, 0.4);
+        }
+
+        .back-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(168, 230, 207, 0.6);
+        }
+
+        .back-btn:active {
+            transform: scale(0.95);
+        }
+
+        .header-title {
+            font-size: 1.5em;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* 中部內容區域 */
         main {
             flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .content-box {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 40px;
+            padding: 40px 60px;
+            min-height: 300px;
+            min-width: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            border: 6px dashed #ff9a9e;
+            margin-bottom: 30px;
         }
 
         #content {
-            font-size: 30vmin;
-            color: rgb(245, 166, 47);
+            font-size: 5em;
+            font-weight: bold;
+            text-align: center;
+            animation: contentPop 0.5s ease;
+        }
+
+        @keyframes contentPop {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .syllable {
+            display: inline-block;
+            margin: 0 5px;
+            animation: syllablePop 0.3s ease;
+        }
+
+        @keyframes syllablePop {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
+        }
+
+        /* 底部按鈕區域 */
+        footer {
+            background: linear-gradient(135deg, #a8e6cf 0%, #88d8b0 100%);
+            border-radius: 30px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 10px 30px rgba(168, 230, 207, 0.4);
+            border: 4px solid #fff;
+        }
+
+        .btn-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .control-btn {
+            background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+            border: 4px solid #ff9a9e;
+            border-radius: 25px;
+            padding: 15px 30px;
+            font-size: 1.5em;
+            font-family: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 120px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .control-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            border-color: #feca57;
+        }
+
+        .control-btn:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .play-btn {
+            background: linear-gradient(135deg, #89c4f4 0%, #6bb3e0 100%);
+            border-color: #5da3d8;
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .play-btn:hover {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            border-color: #feca57;
+        }
+
+        /* 頁尾版權 */
+        .copyright {
+            text-align: center;
+            padding: 15px;
+            color: #fff;
+            font-size: 0.9em;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            margin-top: 15px;
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            .content-box {
+                min-width: 90%;
+                padding: 30px 40px;
+                min-height: 250px;
+            }
+            #content {
+                font-size: 3.5em;
+            }
+            .btn-row {
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+            .control-btn {
+                min-width: 100px;
+                padding: 12px 20px;
+                font-size: 1.2em;
+            }
+            .header-title {
+                font-size: 1.2em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .content-box {
+                padding: 25px 30px;
+                min-height: 200px;
+                border-radius: 30px;
+                border-width: 4px;
+            }
+            #content {
+                font-size: 2.5em;
+            }
+            .control-btn {
+                min-width: 80px;
+                padding: 10px 15px;
+                font-size: 1em;
+            }
+            header {
+                padding: 12px 15px;
+            }
+            .back-btn {
+                padding: 8px 15px;
+                font-size: 0.9em;
+            }
+            .header-title {
+                font-size: 1em;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- 背景星星裝飾 -->
+    <div class="star" style="top: 10%; left: 10%;">⭐</div>
+    <div class="star" style="top: 20%; right: 15%; animation-delay: 0.5s;">🌟</div>
+    <div class="star" style="top: 60%; left: 20%; animation-delay: 1s;">⭐</div>
+    <div class="star" style="top: 80%; right: 10%; animation-delay: 1.5s;">🌟</div>
 
-     <!-- 頭部 -->
-    <header class="bg-primary text-white text-center py-3">
-         <button id="back" class="btn btn-light btn-sm">
-            <i class="fas fa-arrow-left"></i> 返回
-        </button>
-        <p class="mb-0">© 2025 Duideduo. 版權所有。</p>
-    </header>
-
-    <!-- 中部 -->
-    <main class="container my-4">
-        <div class="row">
-            <div class="col-12">
-                <div id="content" class="text-center"></div>
-            </div>
-        </div>
-    </main>
-
-    <!-- 腳部 -->
-    <footer class="bg-light text-white text-center py-3">
-        <div class="row text-center">
-        <div class="col">
-            <button id="prev" class="btn btn-secondary rounded-btn">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;《&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;</button>
-        </div>
-        <div class="col">
-            <button id="playAudio" class="btn btn-secondary rounded-btn">
-                <i class="fas fa-volume-up" style="width: 100px;"></i>
+    <div class="container">
+        <!-- 頭部 -->
+        <header>
+            <button id="back" class="back-btn">
+                ⬅️ 返回
             </button>
-        </div>
-        <div class="col">
-            <button id="next" class="btn btn-secondary rounded-btn">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;》&nbsp;&nbsp;&nbsp;&nbsp;</button>
-        </div>
+            <h1 class="header-title">🎈 快樂學習！ 🎈</h1>
+            <div style="width: 80px;"></div>
+        </header>
+
+        <!-- 中部 -->
+        <main>
+            <div class="content-box">
+                <div id="content"></div>
+            </div>
+        </main>
+
+        <!-- 底部按鈕 -->
+        <footer>
+            <div class="btn-row">
+                <button id="prev" class="control-btn">
+                    ⏮️ 上一個
+                </button>
+                <button id="playAudio" class="control-btn play-btn">
+                    🔊 發音
+                </button>
+                <button id="next" class="control-btn">
+                    下一個 ⏭️
+                </button>
+            </div>
+            <div class="copyright">
+                © 2025 Duideduo. 版權所有。 ❤️
+            </div>
+        </footer>
     </div>
-    </footer>
 
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script>
+    <script>
+        // 获取当前页面的 URL 參數
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const selectValue = urlParams.get('selectValue');
+        const languageValue = urlParams.get('languageValue');
 
-    // 获取当前页面的 URL
-    const queryString = window.location.search;
+        let isChinese = false;
 
-    // 创建一个 URLSearchParams 对象以读取参数
-    const urlParams = new URLSearchParams(queryString);
+        // 單字庫
+        let level1_eng = ["microwave", "oven", "cooker", "stove", "sink", 
+                    "tap", "fridge", "cabinet", "blender", "dishwasher","coloured pencil","highlighter","paper clip","stapler","rubber","scissors","tape","glue stick"];
+        
+        let level2_eng = ["spring","summer","autumn","winter","rainy","sunny","windy","snowy","snow","snowball","snowman","hat","scarf","button","snowflake","icicle","sleigh","santa claus","reindeer","christmas tree","stocking","present","chimney","fireplace"];
 
-    // 获取参数的值
-    const selectValue = urlParams.get('selectValue');
-    const languageValue = urlParams.get('languageValue');
+        let k2_eng=["sex",
+        "sun",
+        "sad",
+        "snake",
+        "grass",
+        "kiss",
+        "bus",
+        "book",
+        "crayon",
+        "pencil",
+        "school bag",
+        "tiger",
+        "teacher",
+        "toy",
+        "goat",
+        "cat",
+        "fat",
+        "ear",
+        "eye",
+        "mouth",
+        "nose",
+        "teeth",
+        "ant",
+        "apple",
+        "rat",
+        "bag",
+        "hat",
+        "grandfather",
+        "grandmother",
+        "sister",
+        "brother",
+        "daddy",
+        "mummy",
+        "pig",
+        "panda",
+        "pizza",
+        "sheep",
+        "map",
+        "cup",
+        "climb",
+        "dance",
+        "jump",
+        "run",
+        "walk",
+        "nest",
+        "nap",
+        "nut",
+        "hen",
+        "bread",
+        "butter",
+        "cheese",
+        "jam",
+        "juice",
+        "milk"];
 
-    let isChinese = false;
+        let k2_chg=["你好",
+        "同學",
+        "唱歌",
+        "課室",
+        "老師",
+        "朋友",
+        "對不起",
+        "謝謝",
+        "再見",
+        "上",
+        "中",
+        "下",
+        "爸爸",
+        "媽媽",
+        "家",
+        "身體",
+        "男孩子",
+        "女孩子",
+        "長",
+        "短",
+        "哥哥",
+        "弟弟",
+        "姐姐",
+        "妹妹",
+        "哭",
+        "笑",
+        "開心",
+        "傷心",
+        "生氣",
+        "水果",
+        "麵條",
+        "牛奶",
+        "農夫",
+        "蔬菜",
+        "青瓜",
+        "米",
+        "肉",
+        "魚",
+        "芝士",
+        "雞蛋",
+        "豆",
+        "胡蘿蔔",
+        "冬天",
+        "火鍋",
+        "做運動",
+        "寒冷"];
 
-    let level1_eng = ["microwave", "oven", "cooker", "stove", "sink", 
-                "tap", "fridge", "cabinet", "blender", "dishwasher","coloured pencil","highlighter","paper clip","stapler","rubber","scissors","tape","glue stick"];
-    
-    let level2_eng = ["spring","summer","autumn","winter","rainy","sunny","windy","snowy","snow","snowball","snowman","hat","scarf","button","snowflake","icicle","sleigh","santa claus","reindeer","christmas tree","stocking","present","chimney","fireplace"];
+        let k3_eng=[
+                    "chick", "duck", "dress", "hair", "ear", "eye", "face", "tooth", "knife", "beer", "bicycle", "flower", "train", "eraser", "socks", "hand", "arm", "tooth","sofa", "banana", "lemon",
+                    "school", "teacher", "ship", "bicycle", "clock", "ruler", "chair", "pizza", "dress",
+                    "telephone"
+                ];
 
-    let k2_eng=["sex",
-    "sun",
-    "sad",
-    "snake",
-    "grass",
-    "kiss",
-    "bus",
-    "book",
-    "crayon",
-    "pencil",
-    "school bag",
-    "tiger",
-    "teacher",
-    "toy",
-    "goat",
-    "cat",
-    "fat",
-    "ear",
-    "eye",
-    "mouth",
-    "nose",
-    "teeth",
-    "ant",
-    "apple",
-    "rat",
-    "bag",
-    "hat",
-    "grandfather",
-    "grandmother",
-    "sister",
-    "brother",
-    "daddy",
-    "mummy",
-    "pig",
-    "panda",
-    "pizza",
-    "sheep",
-    "map",
-    "cup",
-    "climb",
-    "dance",
-    "jump",
-    "run",
-    "walk",
-    "nest",
-    "nap",
-    "nut",
-    "hen",
-    "bread",
-    "butter",
-    "cheese",
-    "jam",
-    "juice",
-    "milk"];
-    let k2_chg=["你好",
-    "同學",
-    "唱歌",
-    "課室",
-    "老師",
-    "朋友",
-    "對不起",
-    "謝謝",
-    "再見",
-    "上",
-    "中",
-    "下",
-    "爸爸",
-    "媽媽",
-    "家",
-    "身體",
-    "男孩子",
-    "女孩子",
-    "長",
-    "短",
-    "哥哥",
-    "弟弟",
-    "姐姐",
-    "妹妹",
-    "哭",
-    "笑",
-    "開心",
-    "傷心",
-    "生氣",
-    "水果",
-    "麵條",
-    "牛奶",
-    "農夫",
-    "蔬菜",
-    "青瓜",
-    "米",
-    "肉",
-    "魚",
-    "芝士",
-    "雞蛋",
-    "豆",
-    "胡蘿蔔",
-    "冬天",
-    "火鍋",
-    "做運動",
-    "寒冷"];
-    let k3_eng=[
-                "Fill in", "circle", "draw", "given number", "write", "Numbers", "color", "count", "odd number", "even number", "counting-on", "counting-back", "Missing letter", "correct answer", "dance", "eat", "jump", "chair", "table", "desk", "pineapple", "apple", "pear", "grape", "strawberry", "Rectangle", "Triangle", "Circle", "Square", "giraffe", "kangaroo", "shark", "dolphin", "the smallest", "the largest", "left", "right", "up", "down", "policeman", "policewoman", "teacher", "nurse", "driver", "bus", "bicycle", "car", "train", "Red", "Orange", "Yellow", "Green", "Blue","angry",
-    "happy",
-    "hungry",
-    "sad",
-    "thirsty",
-    "apple",
-    "ant",
-    "ankle",
-    "fruit",
-    "meat",
-    "noodles",
-    "rice",
-    "vegetables",
-    "van",
-    "vase",
-    "vet",
-    "violin",
-    "arm(s)",
-    "head",
-    "knee(s)",
-    "shoulder(s)",
-    "toe(s)",
-    "fat",
-    "hat",
-    "cat",
-    "mat",
-    "bat",
-    "big",
-    "small",
-    "fat",
-    "thin",
-    "tall",
-    "short",
-    "he",
-    "she",
-    "it",
-    "sun",
-    "bun",
-    "gun",
-    "fun",
-    "run",
-    "camera",
-    "computer",
-    "smartphone",
-    "telephone"
-            ];
-    let k3_chg=["胡蘿蔔","葡萄", "雞蛋", "春天", "夏天", "秋天", "冬天", "顏色筆", "農曆新年", "圈出", "猜一猜", "公園", "運動", "傳統節日", "填上", "附近", "那里", "昆蟲", "喜歡", "聽", "看", "睡覺", "路邊", "散步", "欣賞", "飛舞", "一件","快樂",
-    "生氣",
-    "擔心",
-    "害怕",
-    "害羞",
-    "外公",
-    "外婆",
-    "祖父",
-    "祖母",
-    "家庭",
-    "椎體",
-    "柱體",
-    "球體",
-    "老師",
-    "警察",
-    "消防員",
-    "醫生",
-    "護士",
-    "司機",
-    "郵差",
-    "圖書館",
-    "國慶日",
-    "中秋節",
-    "乾燥",
-    "健康",
-    "飲食",
-    "多",
-    "少",
-    "相同",
-    "一隻",
-    "一個",
-    "肥胖",
-    "口腔",
-    "食道",
-    "胃",
-    "小腸",
-    "大腸",
-    "身體",
-    "拍球",
-    "路球",
-    "溜冰",
-    "跳舞",
-    "跳繩",
-    "重陽節",
-    "時鐘",
-    "海灘",
-    "堆沙",
-    "海豚",
-    "參觀",
-    "海獅",
-    "海豹",
-    "鯨魚",
-    "海龜",
-    "大自然",
-    "本領",
-    "保護",
-    "海洋",
-    "雪地",
-    "沙漠",
-    "草原",
-    "湖泊",
-    "幫助",
-    "護理員",
-    "醫治",
-    "左",
-    "右",
-    "康復",
-    "再見",
-    "聖誕節",
-    "吃火鍋",
-    "衣物"];
+        let k3_chg=[
+        "蘋果", "足球", "汽車", "西瓜", "玩具", "眼睛", "太陽", "月亮", "水果", "女孩", "男孩", "風扇", "花朵", "蛋糕","蝴蝶", "书本", "耳", "鼻",
+         "课室", "剪刀", "耳朵", "中国", "河马", "毛巾", "牙齿", "风扇",
+        "衣物"];
 
-    let items = [];
-    if(selectValue ==='2' && languageValue==='英'){
-        items = k2_eng;
-        isChinese = false;
-    }else  if(selectValue ==='2' && languageValue==='中'){
-        items = k2_chg;
-        isChinese = true;
-    }else if(selectValue ==='3' && languageValue==='英'){
-        items = k3_eng;
-        isChinese = false;
-    }else  if(selectValue ==='3' && languageValue==='中'){
-        items = k3_chg;
-        isChinese = true;
-    }else if(selectValue ==='4' && languageValue==='英'){
-        items = level1_eng;
-        isChinese = false;
-    }else  if(selectValue ==='5' && languageValue==='英'){
-        items = level2_eng;
-        isChinese = false;
-    }
-    let currentIndex = 0;
-    
-    updateContent();
-
-
-    function updateContent() {
-        const currentItem = items[currentIndex];
-        $("#content").fadeOut();
-        const resultDiv = document.getElementById('content');
-        resultDiv.innerHTML = ''; // 清空之前的結果
-    
-        // 检查是否有中文字符
-        if (isChinese) {
-            // 直接将值放入resultDiv
-            resultDiv.textContent = currentItem;
-        } else {
-            const syllables = getSyllables(currentItem);
-            const colors = ['#f5a62f', '#000000'];
-            syllables.forEach((syllable, index) => {
-                const span = document.createElement('span');
-                span.textContent = syllable;
-                span.className = 'syllable';
-                span.style.color = colors[index % colors.length]; // 設置顏色
-                resultDiv.appendChild(span);
-            });
+        let items = [];
+        if(selectValue ==='2' && languageValue==='英'){
+            items = k2_eng;
+            isChinese = false;
+        }else  if(selectValue ==='2' && languageValue==='中'){
+            items = k2_chg;
+            isChinese = true;
+        }else if(selectValue ==='3' && languageValue==='英'){
+            items = k3_eng;
+            isChinese = false;
+        }else  if(selectValue ==='3' && languageValue==='中'){
+            items = k3_chg;
+            isChinese = true;
+        }else if(selectValue ==='4' && languageValue==='英'){
+            items = level1_eng;
+            isChinese = false;
+        }else  if(selectValue ==='5' && languageValue==='英'){
+            items = level2_eng;
+            isChinese = false;
         }
 
-        $("#content").fadeIn();
-    }
+        let currentIndex = 0;
+        updateContent();
 
-    function getSyllables(word) {
-            // 簡單的音節拆分規則，可以根據需求進行擴展
+        function updateContent() {
+            const currentItem = items[currentIndex];
+            const contentDiv = document.getElementById('content');
+            
+            // 觸發重新渲染動畫
+            contentDiv.style.animation = 'none';
+            contentDiv.offsetHeight; // 觸發重繪
+            contentDiv.style.animation = 'contentPop 0.5s ease';
+            
+            contentDiv.innerHTML = '';
+            
+            if (isChinese) {
+                contentDiv.textContent = currentItem;
+            } else {
+                const syllables = getSyllables(currentItem);
+                const colors = ['#f5a62f', '#1e5631'];
+                syllables.forEach((syllable, index) => {
+                    const span = document.createElement('span');
+                    span.textContent = syllable;
+                    span.className = 'syllable';
+                    span.style.color = colors[index % colors.length];
+                    contentDiv.appendChild(span);
+                });
+            }
+        }
+
+        function getSyllables(word) {
             return word.match(/[^aeiou]*[aeiou]+[^aeiou]*/gi) || [];
         }
 
-    $("#prev").click(function() {
-        if (currentIndex > 0) {
-            currentIndex--;
-            updateContent();
-        }
-    });
+        document.getElementById('prev').addEventListener('click', function() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateContent();
+            }
+        });
 
-    $("#next").click(function() {
-        if (currentIndex < items.length - 1) {
-            currentIndex++;
-            updateContent();
-        }
-    });
+        document.getElementById('next').addEventListener('click', function() {
+            if (currentIndex < items.length - 1) {
+                currentIndex++;
+                updateContent();
+            }
+        });
 
-    // 返回上一個頁面
-    $('#back').click(function() {
-        window.history.back();
-    });
+        document.getElementById('back').addEventListener('click', function() {
+            window.history.back();
+        });
 
-    // 播放音頻
-    $("#playAudio").click(function() {
-        const utterance = new SpeechSynthesisUtterance(items[currentIndex]);
-        utterance.lang = isChinese ? 'zh-HK' : 'en-US';
-        speechSynthesis.speak(utterance);
-    });
-</script>
+        document.getElementById('playAudio').addEventListener('click', function() {
+            const utterance = new SpeechSynthesisUtterance(items[currentIndex]);
+            utterance.lang = isChinese ? 'zh-HK' : 'en-US';
+            utterance.rate = 0.9;
+            utterance.pitch = 1.1;
+            speechSynthesis.speak(utterance);
+        });
 
+        // 鍵盤快捷鍵
+        document.addEventListener('keydown', function(e) {
+            if (e.code === 'ArrowLeft') {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    updateContent();
+                }
+            } else if (e.code === 'ArrowRight') {
+                if (currentIndex < items.length - 1) {
+                    currentIndex++;
+                    updateContent();
+                }
+            } else if (e.code === 'Space') {
+                e.preventDefault();
+                const utterance = new SpeechSynthesisUtterance(items[currentIndex]);
+                utterance.lang = isChinese ? 'zh-HK' : 'en-US';
+                utterance.rate = 0.9;
+                utterance.pitch = 1.1;
+                speechSynthesis.speak(utterance);
+            }
+        });
+    </script>
 </body>
 </html>
