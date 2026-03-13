@@ -348,6 +348,24 @@
     </div>
 
     <script>
+        // 點擊音效
+        function playClickSound() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 800;
+            oscillator.type = 'sine';
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.1);
+        }
+
         // 获取当前页面的 URL 參數
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
@@ -554,6 +572,13 @@
                 isAnswerShown = !isAnswerShown;
                 updateContent();
             }
+            playClickSound();
+        });
+
+        // 返回按鈕
+        document.getElementById('back').addEventListener('click', function() {
+            playClickSound();
+            window.history.back();
         });
 
         document.getElementById('prev').addEventListener('click', function() {
@@ -562,6 +587,7 @@
                 isAnswerShown = false;
                 updateContent();
             }
+            playClickSound();
         });
 
         document.getElementById('next').addEventListener('click', function() {
@@ -570,6 +596,7 @@
                 isAnswerShown = false;
                 updateContent();
             }
+            playClickSound();
         });
 
         document.getElementById('back').addEventListener('click', function() {
