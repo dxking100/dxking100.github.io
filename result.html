@@ -107,6 +107,35 @@
             animation: bounce 2s ease-in-out infinite;
         }
 
+        .hide-mode-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.3);
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .hide-mode-label:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        #hideMode {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #ff9a9e;
+        }
+
+        .hide-mode-text {
+            font-size: 0.9em;
+            color: #fff;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-5px); }
@@ -260,6 +289,12 @@
             .header-title {
                 font-size: 1em;
             }
+            .hide-mode-label {
+                padding: 6px 10px;
+            }
+            .hide-mode-text {
+                font-size: 0.8em;
+            }
         }
     </style>
 </head>
@@ -277,7 +312,10 @@
                 ⬅️
             </button>
             <h1 class="header-title">🎈 快樂學習！ 🎈</h1>
-            <div style="width: 80px;"></div>
+            <label class="hide-mode-label">
+                <input type="checkbox" id="hideMode">
+                <span class="hide-mode-text">隱藏模式</span>
+            </label>
         </header>
 
         <!-- 中部 -->
@@ -292,6 +330,9 @@
             <div class="btn-row">
                 <button id="prev" class="control-btn">
                     ⏮️
+                </button>
+                <button id="showAnswer" class="control-btn play-btn">
+                    👁️
                 </button>
                 <button id="playAudio" class="control-btn play-btn">
                     🔊
@@ -456,7 +497,32 @@
         }
 
         let currentIndex = 0;
+        let isHideMode = false;
+        let isAnswerShown = false;
+
         updateContent();
+
+        // 隱藏單字中的隨機位數
+        function hideWord(word) {
+            if (word.length <= 2) {
+                return '_ '.repeat(word.length).trim();
+            }
+            // 隨機顯示 1-2 個字符
+            const showCount = Math.min(Math.floor(Math.random() * 2) + 1, word.length);
+            const indices = new Set();
+            while (indices.size < showCount) {
+                indices.add(Math.floor(Math.random() * word.length));
+            }
+            let result = '';
+            for (let i = 0; i < word.length; i++) {
+                if (indices.has(i)) {
+                    result += word[i] + ' ';
+                } else {
+                    result += '_ ';
+                }
+            }
+            return result.trim();
+        }
 
         function updateContent() {
             const currentItem = items[currentIndex];
@@ -467,13 +533,33 @@
             contentDiv.offsetHeight; // 觸發重繪
             contentDiv.style.animation = 'contentPop 0.5s ease';
             
-            // 直接顯示完整單字
-            contentDiv.textContent = currentItem;
+            // 根據隱藏模式和答案顯示狀態來顯示內容
+            if (isHideMode && !isAnswerShown) {
+                contentDiv.textContent = hideWord(currentItem);
+            } else {
+                contentDiv.textContent = currentItem;
+            }
         }
+
+        // 隱藏模式切換
+        document.getElementById('hideMode').addEventListener('change', function() {
+            isHideMode = this.checked;
+            isAnswerShown = false;
+            updateContent();
+        });
+
+        // 顯示答案按鈕
+        document.getElementById('showAnswer').addEventListener('click', function() {
+            if (isHideMode) {
+                isAnswerShown = !isAnswerShown;
+                updateContent();
+            }
+        });
 
         document.getElementById('prev').addEventListener('click', function() {
             if (currentIndex > 0) {
                 currentIndex--;
+                isAnswerShown = false;
                 updateContent();
             }
         });
@@ -481,6 +567,7 @@
         document.getElementById('next').addEventListener('click', function() {
             if (currentIndex < items.length - 1) {
                 currentIndex++;
+                isAnswerShown = false;
                 updateContent();
             }
         });
@@ -502,15 +589,28 @@
             if (e.code === 'ArrowLeft') {
                 if (currentIndex > 0) {
                     currentIndex--;
+                    isAnswerShown = false;
                     updateContent();
                 }
             } else if (e.code === 'ArrowRight') {
                 if (currentIndex < items.length - 1) {
                     currentIndex++;
+                    isAnswerShown = false;
                     updateContent();
                 }
             } else if (e.code === 'Space') {
                 e.preventDefault();
+                if (isHideMode) {
+                    isAnswerShown = !isAnswerShown;
+                    updateContent();
+                } else {
+                    const utterance = new SpeechSynthesisUtterance(items[currentIndex]);
+                    utterance.lang = isChinese ? 'zh-HK' : 'en-US';
+                    utterance.rate = 0.9;
+                    utterance.pitch = 1.1;
+                    speechSynthesis.speak(utterance);
+                }
+            } else if (e.code === 'KeyP') {
                 const utterance = new SpeechSynthesisUtterance(items[currentIndex]);
                 utterance.lang = isChinese ? 'zh-HK' : 'en-US';
                 utterance.rate = 0.9;
