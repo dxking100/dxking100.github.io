@@ -202,24 +202,6 @@
             box-shadow: 0 8px 25px rgba(155,89,182,0.4);
         }
 
-        .progress {
-            padding: 15px;
-            background: linear-gradient(135deg, #e8f8f0 0%, #d5f5e3 100%);
-            border-radius: 18px;
-            border: 2px solid #a8e6cf;
-        }
-
-        .progress-text {
-            font-size: 1.1em;
-            color: #1e5631;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
-
-        .stars {
-            font-size: 2em;
-        }
-
         .hint {
             color: #5d8a66;
             font-size: 0.9em;
@@ -384,11 +366,6 @@
                     <button class="btn btn-speak" onclick="speakWord()">發音</button>
                     <button class="btn btn-next" onclick="nextWord()">下一個</button>
                 </div>
-
-                <div class="progress">
-                    <div class="progress-text">進度：<span id="currentNum">1</span> / <span id="totalNum">5</span></div>
-                    <div class="stars" id="stars">⭐⭐⭐</div>
-                </div>
             </div>
         </div>
     </div>
@@ -404,7 +381,6 @@
         ];
 
         let currentIndex = 0;
-        let stars = 3;
 
         function loadWord() {
             const word = words[currentIndex];
@@ -414,9 +390,6 @@
             mainWordEl.textContent = word.word;
             mainWordEl.style.color = '#1e5631';
             
-            document.getElementById('currentNum').textContent = currentIndex + 1;
-            document.getElementById('totalNum').textContent = words.length;
-            
             mainWordEl.style.animation = 'none';
             mainWordEl.offsetHeight;
             mainWordEl.style.animation = 'wordPop 0.5s ease';
@@ -425,13 +398,6 @@
         function nextWord() {
             currentIndex = (currentIndex + 1) % words.length;
             loadWord();
-            
-            stars = Math.floor(Math.random() * 3) + 1;
-            let starString = '';
-            for (let i = 0; i < stars; i++) {
-                starString += '⭐';
-            }
-            document.getElementById('stars').textContent = starString;
             
             if (currentIndex === 0) {
                 createConfetti();
