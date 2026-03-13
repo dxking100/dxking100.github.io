@@ -258,18 +258,127 @@
             100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
         }
 
-        /* 響應式 */
+        /* 響應式 - 平板電腦 */
+        @media (max-width: 1024px) {
+            .container {
+                padding: 20px 25px;
+            }
+            .main-content {
+                gap: 25px;
+            }
+            .word-card {
+                min-width: 240px;
+                min-height: 150px;
+                padding: 30px 40px;
+            }
+            .main-word {
+                font-size: 2.5em;
+            }
+            .hint-word {
+                font-size: 1.8em;
+            }
+        }
+
+        /* 響應式 - 手機 */
         @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                padding: 15px 20px;
+                border-radius: 20px;
+                border-width: 4px;
+            }
             .main-content {
                 flex-direction: column;
+                gap: 20px;
+            }
+            .left-panel, .right-panel {
+                width: 100%;
+            }
+            .mode-selector {
+                gap: 8px;
+                margin-bottom: 15px;
+            }
+            .mode-btn {
+                padding: 6px 12px;
+                font-size: 0.8em;
+            }
+            .word-card {
+                min-width: 100%;
+                min-height: 140px;
+                padding: 25px 30px;
+                border-radius: 20px;
+                border-width: 3px;
+            }
+            .main-word {
+                font-size: 2.2em;
+                letter-spacing: 3px;
+            }
+            .hint-word {
+                font-size: 1.6em;
             }
             .btn-group {
                 flex-direction: row;
                 flex-wrap: wrap;
                 justify-content: center;
+                gap: 10px;
+            }
+            .btn {
+                min-width: 100px;
+                padding: 10px 18px;
+                font-size: 0.9em;
             }
             .btn:hover {
                 transform: translateY(-4px);
+            }
+            .progress {
+                padding: 12px;
+                border-radius: 15px;
+            }
+            .progress-text {
+                font-size: 1em;
+            }
+            .stars {
+                font-size: 1.6em;
+            }
+            .hint {
+                font-size: 0.85em;
+                margin-top: 12px;
+            }
+        }
+
+        /* 響應式 - 小手機 */
+        @media (max-width: 480px) {
+            .container {
+                padding: 12px 15px;
+                border-radius: 15px;
+            }
+            .word-card {
+                padding: 20px 25px;
+                min-height: 120px;
+            }
+            .main-word {
+                font-size: 1.8em;
+                letter-spacing: 2px;
+            }
+            .hint-word {
+                font-size: 1.4em;
+            }
+            .mode-btn {
+                padding: 5px 10px;
+                font-size: 0.75em;
+            }
+            .btn {
+                min-width: 90px;
+                padding: 8px 14px;
+                font-size: 0.85em;
+            }
+            .progress-text {
+                font-size: 0.9em;
+            }
+            .stars {
+                font-size: 1.4em;
             }
         }
     </style>
@@ -279,9 +388,8 @@
         <div class="main-content">
             <div class="left-panel">
                 <div class="mode-selector">
-                    <button class="mode-btn active" id="modeEnToZh" onclick="setMode('enToZh')">英譯中</button>
-                    <button class="mode-btn" id="modeZhToEn" onclick="setMode('zhToEn')">中譯英</button>
-                    <button class="mode-btn" id="modeHideEn" onclick="setMode('hideEn')">隱藏英文</button>
+                    <button class="mode-btn active" id="modeLearnEn" onclick="setMode('learnEn')">背英文</button>
+                    <button class="mode-btn" id="modeLearnZh" onclick="setMode('learnZh')">背中文</button>
                 </div>
                 
                 <div class="word-card" id="wordCard" onclick="toggleHint()">
@@ -289,7 +397,7 @@
                     <div class="hint-word" id="hintWord">熊貓</div>
                 </div>
 
-                <p class="hint">點擊卡片或按空格鍵顯示答案</p>
+                <p class="hint" id="hintText">點擊卡片或按空格鍵顯示答案</p>
             </div>
 
             <div class="right-panel">
@@ -308,22 +416,45 @@
     </div>
 
     <script>
-        const words = [
-            { english: "Panda", chinese: "熊貓" },
-            { english: "Colour", chinese: "顏色" },
-            { english: "Sex", chinese: "性別" }
+        // 英文單字庫（背英文模式）
+        const englishWords = [
+            { word: "Panda", hint: "熊貓" },
+            { word: "Colour", hint: "顏色" },
+            { word: "Elephant", hint: "大象" },
+            { word: "Computer", hint: "電腦" },
+            { word: "Delicious", hint: "美味的" }
+        ];
+
+        // 中文單字庫（背中文模式）
+        const chineseWords = [
+            { word: "熊貓", hint: "Panda" },
+            { word: "顏色", hint: "Colour" },
+            { word: "快樂", hint: "Happy" },
+            { word: "朋友", hint: "Friend" },
+            { word: "學校", hint: "School" }
         ];
 
         let currentIndex = 0;
         let stars = 3;
-        let currentMode = 'enToZh';
+        let currentMode = 'learnEn';
         let isHintShown = false;
+        let currentWords = englishWords;
 
         function setMode(mode) {
             currentMode = mode;
-            document.getElementById('modeEnToZh').classList.toggle('active', mode === 'enToZh');
-            document.getElementById('modeZhToEn').classList.toggle('active', mode === 'zhToEn');
-            document.getElementById('modeHideEn').classList.toggle('active', mode === 'hideEn');
+            document.getElementById('modeLearnEn').classList.toggle('active', mode === 'learnEn');
+            document.getElementById('modeLearnZh').classList.toggle('active', mode === 'learnZh');
+            
+            // 切換單字庫
+            if (mode === 'learnEn') {
+                currentWords = englishWords;
+                document.getElementById('hintText').textContent = '點擊卡片或按空格鍵顯示中文提示';
+            } else if (mode === 'learnZh') {
+                currentWords = chineseWords;
+                document.getElementById('hintText').textContent = '點擊卡片或按空格鍵顯示英文提示';
+            }
+            
+            currentIndex = 0;
             isHintShown = false;
             loadWord();
         }
@@ -332,7 +463,7 @@
             if (word.length <= 2) {
                 return '_ '.repeat(word.length).trim();
             }
-            const showCount = Math.min(Math.floor(Math.random() * 3) + 1, word.length);
+            const showCount = Math.min(Math.floor(Math.random() * 2) + 1, word.length);
             const indices = new Set();
             while (indices.size < showCount) {
                 indices.add(Math.floor(Math.random() * word.length));
@@ -349,30 +480,19 @@
         }
 
         function loadWord() {
-            const word = words[currentIndex];
+            const word = currentWords[currentIndex];
             const mainWordEl = document.getElementById('mainWord');
             const hintWordEl = document.getElementById('hintWord');
             
-            if (currentMode === 'enToZh') {
-                mainWordEl.textContent = word.english;
-                hintWordEl.textContent = word.chinese;
-                mainWordEl.style.color = '#1e5631';
-                hintWordEl.style.color = '#e74c3c';
-            } else if (currentMode === 'zhToEn') {
-                mainWordEl.textContent = word.chinese;
-                hintWordEl.textContent = word.english;
-                mainWordEl.style.color = '#e74c3c';
-                hintWordEl.style.color = '#1e5631';
-            } else if (currentMode === 'hideEn') {
-                mainWordEl.textContent = hideWord(word.english);
-                hintWordEl.textContent = word.chinese;
-                mainWordEl.style.color = '#1e5631';
-                hintWordEl.style.color = '#e74c3c';
-            }
+            // 顯示隱藏單字（部分字母/筆畫）
+            mainWordEl.textContent = hideWord(word.word);
+            mainWordEl.style.color = '#1e5631';
+            hintWordEl.textContent = word.hint;
+            hintWordEl.style.color = '#e74c3c';
             
             document.getElementById('wordCard').classList.remove('show-hint');
             document.getElementById('currentNum').textContent = currentIndex + 1;
-            document.getElementById('totalNum').textContent = words.length;
+            document.getElementById('totalNum').textContent = currentWords.length;
             
             mainWordEl.style.animation = 'none';
             mainWordEl.offsetHeight;
@@ -383,23 +503,19 @@
             isHintShown = !isHintShown;
             const wordCard = document.getElementById('wordCard');
             const mainWordEl = document.getElementById('mainWord');
-            const word = words[currentIndex];
+            const word = currentWords[currentIndex];
             
             if (isHintShown) {
                 wordCard.classList.add('show-hint');
-                if (currentMode === 'hideEn') {
-                    mainWordEl.textContent = word.english;
-                }
+                mainWordEl.textContent = word.word;
             } else {
                 wordCard.classList.remove('show-hint');
-                if (currentMode === 'hideEn') {
-                    mainWordEl.textContent = hideWord(word.english);
-                }
+                mainWordEl.textContent = hideWord(word.word);
             }
         }
 
         function nextWord() {
-            currentIndex = (currentIndex + 1) % words.length;
+            currentIndex = (currentIndex + 1) % currentWords.length;
             isHintShown = false;
             loadWord();
             
@@ -416,11 +532,16 @@
         }
 
         function speakWord() {
-            const word = words[currentIndex].english;
+            const word = currentWords[currentIndex].word;
             
             if ('speechSynthesis' in window) {
                 const utterance = new SpeechSynthesisUtterance(word);
-                utterance.lang = 'en-US';
+                // 根據模式選擇發音語言
+                if (currentMode === 'learnEn') {
+                    utterance.lang = 'en-US';
+                } else if (currentMode === 'learnZh') {
+                    utterance.lang = 'zh-CN';
+                }
                 utterance.rate = 0.8;
                 utterance.pitch = 1.1;
                 window.speechSynthesis.speak(utterance);
