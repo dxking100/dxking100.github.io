@@ -694,6 +694,12 @@
             }
         });
 
+        // 禁用雙擊功能
+        document.addEventListener('dblclick', function(e) {
+            e.preventDefault();
+            return false;
+        });
+
         // 鍵盤快捷鍵
         document.addEventListener('keydown', function(e) {
             if (e.code === 'ArrowLeft') {
