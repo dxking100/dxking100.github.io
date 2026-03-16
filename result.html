@@ -150,18 +150,44 @@
             align-items: center;
         }
 
+        /* 內容和圖片容器 */
+        .content-wrapper {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
         .content-box {
+            flex: 1;
             background: rgba(255, 255, 255, 0.95);
             border-radius: 40px;
-            padding: 60px 80px;
+            padding: 60px 40px;
             min-height: 400px;
-            min-width: 500px;
             display: flex;
             justify-content: center;
             align-items: center;
             box-shadow: 0 20px 60px rgba(0,0,0,0.15);
             border: 6px dashed #ff9a9e;
-            margin-bottom: 30px;
+        }
+
+        /* 圖片搜索 iframe */
+        .image-search-container {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 30px;
+            padding: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            border: 4px solid #a8e6cf;
+            min-height: 400px;
+        }
+
+        #imageFrame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 20px;
         }
 
         #content {
@@ -242,9 +268,16 @@
 
         /* 響應式設計 */
         @media (max-width: 768px) {
+            .content-wrapper {
+                flex-direction: column;
+            }
             .content-box {
-                min-width: 90%;
+                min-width: 100%;
                 padding: 40px 50px;
+                min-height: 300px;
+            }
+            .image-search-container {
+                min-width: 100%;
                 min-height: 300px;
             }
             #content {
@@ -265,11 +298,17 @@
         }
 
         @media (max-width: 480px) {
+            .content-wrapper {
+                flex-direction: column;
+            }
             .content-box {
                 padding: 35px 40px;
                 min-height: 250px;
                 border-radius: 30px;
                 border-width: 4px;
+            }
+            .image-search-container {
+                min-height: 250px;
             }
             #content {
                 font-size: 3.5em;
@@ -320,8 +359,14 @@
 
         <!-- 中部 -->
         <main>
-            <div class="content-box">
-                <div id="content"></div>
+            <div class="content-wrapper">
+                <div class="content-box">
+                    <div id="content"></div>
+                </div>
+                <!-- 圖片搜索 iframe -->
+                <div class="image-search-container">
+                    <iframe id="imageFrame" src="" title="圖片搜索"></iframe>
+                </div>
             </div>
         </main>
 
@@ -517,6 +562,8 @@
         let currentIndex = 0;
         let isHideMode = false;
         let isAnswerShown = false;
+        let pronouncedWords = []; // 記錄已發音的單詞索引
+        let randomReviewChance = 0.4; // 40% 機率隨機複習已發音的單詞
 
         updateContent();
 
@@ -557,6 +604,16 @@
             } else {
                 contentDiv.textContent = currentItem;
             }
+            
+            // 更新 iframe 圖片搜索 URL
+            updateImageSearch(currentItem);
+        }
+
+        // 更新圖片搜索 iframe
+        function updateImageSearch(word) {
+            const imageFrame = document.getElementById('imageFrame');
+            const searchUrl = `https://www.bing.com/images/search?q=${encodeURIComponent(word)}+Cartoon+Png&form=IRTRRL&first=1`;
+            imageFrame.src = searchUrl;
         }
 
         // 隱藏模式切換
@@ -591,11 +648,20 @@
         });
 
         document.getElementById('next').addEventListener('click', function() {
-            if (currentIndex < items.length - 1) {
-                currentIndex++;
-                isAnswerShown = false;
-                updateContent();
+            isAnswerShown = false;
+            
+            // 如果有已發音的單詞，且隨機數小於複習機率，則隨機選擇一個已發音的單詞
+            if (pronouncedWords.length > 0 && Math.random() < randomReviewChance) {
+                const randomIndex = Math.floor(Math.random() * pronouncedWords.length);
+                currentIndex = pronouncedWords[randomIndex];
+            } else {
+                // 否則正常進入下一個
+                if (currentIndex < items.length - 1) {
+                    currentIndex++;
+                }
             }
+            
+            updateContent();
             playClickSound();
         });
 
@@ -609,6 +675,11 @@
             utterance.rate = 0.9;
             utterance.pitch = 1.1;
             speechSynthesis.speak(utterance);
+            
+            // 將當前單詞加入已發音列表（如果還不在列表中）
+            if (!pronouncedWords.includes(currentIndex)) {
+                pronouncedWords.push(currentIndex);
+            }
         });
 
         // 鍵盤快捷鍵
@@ -636,6 +707,10 @@
                     utterance.rate = 0.9;
                     utterance.pitch = 1.1;
                     speechSynthesis.speak(utterance);
+                    // 將當前單詞加入已發音列表
+                    if (!pronouncedWords.includes(currentIndex)) {
+                        pronouncedWords.push(currentIndex);
+                    }
                 }
             } else if (e.code === 'KeyP') {
                 const utterance = new SpeechSynthesisUtterance(items[currentIndex]);
@@ -643,6 +718,10 @@
                 utterance.rate = 0.9;
                 utterance.pitch = 1.1;
                 speechSynthesis.speak(utterance);
+                // 將當前單詞加入已發音列表
+                if (!pronouncedWords.includes(currentIndex)) {
+                    pronouncedWords.push(currentIndex);
+                }
             }
         });
     </script>
