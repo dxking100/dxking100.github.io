@@ -212,10 +212,10 @@
 
         #imageFrame {
             width: 100%;
-            height: calc(100% + 50px);
+            height: calc(100% + 200px);
             border: none;
             border-radius: 20px;
-            transform: translateY(-50px);
+            transform: translateY(-200px);
         }
 
         #content {
@@ -613,13 +613,13 @@
             const searchUrl = `https://www.bing.com/images/search?q=${encodeURIComponent(word)}+Cartoon+Png&form=IRTRRL&first=1`;
             imageFrame.src = searchUrl;
             
-            // iframe 加載後自動向下滾動 50px（延遲執行）
+            // iframe 加載後自動向下滾動 200px（延遲執行）
             setTimeout(function() {
                 try {
                     const iframeDoc = imageFrame.contentDocument || imageFrame.contentWindow.document;
-                    iframeDoc.documentElement.scrollTop = 50;
-                    iframeDoc.body.scrollTop = 50;
-                    iframeDoc.body.scrollBy(0, 50);
+                    iframeDoc.documentElement.scrollTop = 200;
+                    iframeDoc.body.scrollTop = 200;
+                    iframeDoc.body.scrollBy(0, 200);
                 } catch(e) {
                     // 跨域限制，嘗試使用 postMessage
                     console.log('跨域限制，嘗試其他方法');
