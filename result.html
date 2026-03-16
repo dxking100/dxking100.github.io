@@ -64,44 +64,6 @@
             flex-direction: column;
         }
 
-        /* 頭部區域 */
-        header {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            padding: 15px 25px;
-            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
-            border-radius: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(255, 154, 158, 0.4);
-            border: 4px solid #fff;
-        }
-
-        .header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .header-controls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
         .back-btn {
             background: linear-gradient(135deg, #a8e6cf 0%, #88d8b0 100%);
             border: none;
@@ -268,11 +230,34 @@
             border-color: #feca57;
         }
 
+        /* 底部按鈕區域 */
+        footer {
+            background: linear-gradient(135deg, #a8e6cf 0%, #88d8b0 100%);
+            border-radius: 30px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 10px 30px rgba(168, 230, 207, 0.4);
+            border: 4px solid #fff;
+        }
+
+        .footer-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            align-items: center;
+        }
+
         /* 響應式設計 */
         @media (max-width: 768px) {
-            .header-row {
-                justify-content: center;
-            }
             .content-wrapper {
                 flex-direction: column;
             }
@@ -293,12 +278,17 @@
                 padding: 10px 15px;
                 font-size: 1.1em;
             }
+            .footer-top {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .btn-row {
+                flex-wrap: wrap;
+                gap: 15px;
+            }
         }
 
         @media (max-width: 480px) {
-            .header-row {
-                justify-content: center;
-            }
             .content-wrapper {
                 flex-direction: column;
             }
@@ -319,9 +309,6 @@
                 padding: 8px 12px;
                 font-size: 1em;
             }
-            header {
-                padding: 12px 15px;
-            }
             .back-btn {
                 padding: 8px 15px;
                 font-size: 0.9em;
@@ -331,6 +318,14 @@
             }
             .hide-mode-text {
                 font-size: 0.8em;
+            }
+            .footer-top {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .btn-row {
+                flex-wrap: wrap;
+                gap: 15px;
             }
         }
     </style>
@@ -343,39 +338,6 @@
     <div class="star" style="top: 80%; right: 10%; animation-delay: 1.5s;">🌟</div>
 
     <div class="container">
-        <!-- 頭部 -->
-        <header>
-            <div class="header-row">
-                <div class="header-left">
-                    <button id="back" class="back-btn">
-                        ⬅️
-                    </button>
-                </div>
-                <div class="header-right">
-                    <label class="hide-mode-label">
-                        <input type="checkbox" id="hideMode">
-                        <span class="hide-mode-text">隱藏模式</span>
-                    </label>
-                </div>
-            </div>
-            <div class="header-row">
-                <div class="header-controls">
-                    <button id="prev" class="control-btn">
-                        ⏮️
-                    </button>
-                    <button id="showAnswer" class="control-btn play-btn">
-                        👁️
-                    </button>
-                    <button id="playAudio" class="control-btn play-btn">
-                        🔊
-                    </button>
-                    <button id="next" class="control-btn">
-                        ⏭️
-                    </button>
-                </div>
-            </div>
-        </header>
-
         <!-- 中部 -->
         <main>
             <div class="content-wrapper">
@@ -389,6 +351,32 @@
             </div>
         </main>
 
+        <!-- 底部按鈕 -->
+        <footer>
+            <div class="footer-top">
+                <button id="back" class="back-btn">
+                    ⬅️
+                </button>
+                <label class="hide-mode-label">
+                    <input type="checkbox" id="hideMode">
+                    <span class="hide-mode-text">隱藏模式</span>
+                </label>
+            </div>
+            <div class="btn-row">
+                <button id="prev" class="control-btn">
+                    ⏮️
+                </button>
+                <button id="showAnswer" class="control-btn play-btn">
+                    👁️
+                </button>
+                <button id="playAudio" class="control-btn play-btn">
+                    🔊
+                </button>
+                <button id="next" class="control-btn">
+                    ⏭️
+                </button>
+            </div>
+        </footer>
     </div>
 
     <script>
