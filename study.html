@@ -117,6 +117,17 @@
             margin-bottom: 30px;
         }
 
+        /* 數學按鈕 */
+        .btn-math {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: #fff;
+            border: 5px solid #fff;
+        }
+
+        .btn-math.active {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+        }
+
         .language-btn {
             flex: 1;
             max-width: 200px;
@@ -273,6 +284,10 @@
                     英
                     <span class="btn-decoration">🦁</span>
                 </button>
+                <button id="btn3" class="language-btn btn-math">
+                    🧮
+                    <span class="btn-decoration">➕</span>
+                </button>
             </div>
 
             <p class="hint">🎯 選擇一個按鈕開始學習吧！ 🎯</p>
@@ -289,13 +304,24 @@
         document.getElementById('btn1').addEventListener('click', function() {
             this.classList.toggle('active');
             document.getElementById('btn2').classList.remove('active');
+            document.getElementById('btn3').classList.remove('active');
             jump();
         });
 
         document.getElementById('btn2').addEventListener('click', function() {
             this.classList.toggle('active');
             document.getElementById('btn1').classList.remove('active');
+            document.getElementById('btn3').classList.remove('active');
             jump();
+        });
+
+        // 數學按鈕點擊
+        document.getElementById('btn3').addEventListener('click', function() {
+            this.classList.toggle('active');
+            document.getElementById('btn1').classList.remove('active');
+            document.getElementById('btn2').classList.remove('active');
+            // 跳轉到數學頁面
+            window.location.href = 'math.html';
         });
 
         // 跳轉
