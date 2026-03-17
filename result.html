@@ -219,13 +219,15 @@
             overflow: hidden;
             background: #fff;
             box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            position: relative;
         }
 
         #imageFrame {
             width: 100%;
-            height: 100%;
+            height: calc(100% + 150px);
             border: none;
             border-radius: 20px;
+            transform: translateY(-150px);
         }
 
         .control-btn {
@@ -740,19 +742,7 @@
             const imageFrame = document.getElementById('imageFrame');
             const searchUrl = `https://www.bing.com/images/search?q=${encodeURIComponent(word)}+Cartoon+Png&form=IRTRRL&first=1`;
             imageFrame.src = searchUrl;
-            
-            // iframe 加載後自動向下滾動 150px（延遲執行）
-            setTimeout(function() {
-                try {
-                    const iframeDoc = imageFrame.contentDocument || imageFrame.contentWindow.document;
-                    iframeDoc.documentElement.scrollTop = 150;
-                    iframeDoc.body.scrollTop = 150;
-                    iframeDoc.body.scrollBy(0, 150);
-                } catch(e) {
-                    // 跨域限制，嘗試使用 postMessage
-                    console.log('跨域限制，嘗試其他方法');
-                }
-            }, 1500);
+            // iframe 已通過 CSS transform: translateY(-150px) 實現向下偏移 150px
         }
 
         // 隱藏模式切換
