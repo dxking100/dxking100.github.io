@@ -483,10 +483,16 @@
                 <button id="back" class="back-btn">
                     ⬅️
                 </button>
-                <label class="hide-mode-label">
-                    <input type="checkbox" id="hideMode">
-                    <span class="hide-mode-text">隱藏模式</span>
-                </label>
+                <div style="display: flex; gap: 15px;">
+                    <label class="hide-mode-label">
+                        <input type="checkbox" id="hideMode">
+                        <span class="hide-mode-text">隱藏模式</span>
+                    </label>
+                    <label class="hide-mode-label">
+                        <input type="checkbox" id="randomMode">
+                        <span class="hide-mode-text">隨機單詞</span>
+                    </label>
+                </div>
             </div>
             <div class="btn-row">
                 <button id="prev" class="control-btn">
@@ -918,14 +924,27 @@
 
         let currentIndex = 0;
         let isHideMode = false;
+        let isRandomMode = false;
         let isAnswerShown = false;
         let isIframeVisible = false; // iframe 顯示狀態
         let pronouncedWords = []; // 記錄已發音的單詞索引
         let randomReviewChance = 0.05; // 5% 機率隨機複習已發音的單詞
+        let shuffledIndices = []; // 隨機模式下的索引順序
 
         // 初始化 iframe 為隱藏狀態
         document.querySelector('.iframe-card').classList.add('hidden');
         
+        // 初始化隨機索引陣列
+        function initShuffledIndices() {
+            shuffledIndices = items.map((_, i) => i);
+            for (let i = shuffledIndices.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledIndices[i], shuffledIndices[j]] = [shuffledIndices[j], shuffledIndices[i]];
+            }
+            currentIndex = shuffledIndices[0];
+        }
+        
+        initShuffledIndices();
         updateContent();
 
         // 隱藏單字中的隨機位數
@@ -991,6 +1010,18 @@
             updateContent();
         });
 
+        // 隨機模式切換
+        document.getElementById('randomMode').addEventListener('change', function() {
+            isRandomMode = this.checked;
+            if (isRandomMode) {
+                initShuffledIndices();
+            } else {
+                currentIndex = 0;
+            }
+            isAnswerShown = false;
+            updateContent();
+        });
+
         // 顯示答案按鈕
         document.getElementById('showAnswer').addEventListener('click', function() {
             const iframeCard = document.querySelector('.iframe-card');
@@ -1020,10 +1051,21 @@
         });
 
         document.getElementById('prev').addEventListener('click', function() {
-            if (currentIndex > 0) {
-                currentIndex--;
-                isAnswerShown = false;
-                updateContent();
+            if (isRandomMode) {
+                // 隨機模式下使用洗牌後的索引
+                const currentShuffleIndex = shuffledIndices.indexOf(currentIndex);
+                if (currentShuffleIndex > 0) {
+                    currentIndex = shuffledIndices[currentShuffleIndex - 1];
+                    isAnswerShown = false;
+                    updateContent();
+                }
+            } else {
+                // 順序模式下直接遞減
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    isAnswerShown = false;
+                    updateContent();
+                }
             }
             playClickSound();
         });
@@ -1037,8 +1079,17 @@
                 currentIndex = pronouncedWords[randomIndex];
             } else {
                 // 否則正常進入下一個
-                if (currentIndex < items.length - 1) {
-                    currentIndex++;
+                if (isRandomMode) {
+                    // 隨機模式下使用洗牌後的索引
+                    const currentShuffleIndex = shuffledIndices.indexOf(currentIndex);
+                    if (currentShuffleIndex < shuffledIndices.length - 1) {
+                        currentIndex = shuffledIndices[currentShuffleIndex + 1];
+                    }
+                } else {
+                    // 順序模式下直接遞增
+                    if (currentIndex < items.length - 1) {
+                        currentIndex++;
+                    }
                 }
             }
             
@@ -1100,16 +1151,34 @@
         // 鍵盤快捷鍵
         document.addEventListener('keydown', function(e) {
             if (e.code === 'ArrowLeft') {
-                if (currentIndex > 0) {
-                    currentIndex--;
-                    isAnswerShown = false;
-                    updateContent();
+                if (isRandomMode) {
+                    const currentShuffleIndex = shuffledIndices.indexOf(currentIndex);
+                    if (currentShuffleIndex > 0) {
+                        currentIndex = shuffledIndices[currentShuffleIndex - 1];
+                        isAnswerShown = false;
+                        updateContent();
+                    }
+                } else {
+                    if (currentIndex > 0) {
+                        currentIndex--;
+                        isAnswerShown = false;
+                        updateContent();
+                    }
                 }
             } else if (e.code === 'ArrowRight') {
-                if (currentIndex < items.length - 1) {
-                    currentIndex++;
-                    isAnswerShown = false;
-                    updateContent();
+                if (isRandomMode) {
+                    const currentShuffleIndex = shuffledIndices.indexOf(currentIndex);
+                    if (currentShuffleIndex < shuffledIndices.length - 1) {
+                        currentIndex = shuffledIndices[currentShuffleIndex + 1];
+                        isAnswerShown = false;
+                        updateContent();
+                    }
+                } else {
+                    if (currentIndex < items.length - 1) {
+                        currentIndex++;
+                        isAnswerShown = false;
+                        updateContent();
+                    }
                 }
             } else if (e.code === 'Space') {
                 e.preventDefault();
