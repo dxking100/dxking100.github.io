@@ -982,28 +982,94 @@
         // 疑問詞列表
         const questionWords = ["What", "When", "How", "Which", "Where", "Why"];
         
-        // 簡單的句子模板（小學一年級難度）
-        const sentenceTemplates = [
+        // 常見形容詞列表（用於判斷詞性）
+        const adjectives = [
+            "happy", "sad", "angry", "scared", "worried", "hungry", "sleepy", "surprised", 
+            "grateful", "upset", "kind", "evil", "brave", "greedy", "healthy", "strong", 
+            "shortsighted", "rainy", "sunny", "windy", "snowy", "red", "blue", "green", 
+            "yellow", "orange", "purple", "pink", "black", "white", "brown", "big", "small",
+            "tall", "short", "long", "hot", "cold", "warm", "cool", "fast", "slow", "good",
+            "bad", "nice", "pretty", "beautiful", "ugly", "clean", "dirty", "new", "old",
+            "young", "heavy", "light", "soft", "hard", "sweet", "sour", "yummy", "delicious"
+        ];
+        
+        // 常見動詞列表（用於判斷詞性）
+        const verbs = [
+            "run", "walk", "jump", "swim", "fly", "eat", "drink", "sleep", "play", "read",
+            "write", "draw", "sing", "dance", "climb", "kick", "throw", "catch", "bounce",
+            "bend", "stretch", "help", "hug", "share", "respect", "listen", "laugh", "care",
+            "comfort", "hop", "squat", "punch", "march", "jog", "work out", "bake", "paint",
+            "take photos", "skateboard", "look", "wait", "cross", "stop", "sneeze", "cough",
+            "brush", "wash", "clip", "cut", "burn", "bruise", "hurt", "break", "fix", "make",
+            "do", "have", "has", "is", "are", "am", "was", "were", "can", "could", "will",
+            "would", "like", "love", "want", "need", "see", "hear", "feel", "touch", "smell",
+            "taste", "buy", "sell", "give", "take", "get", "put", "sit", "stand", "lie",
+            "ride", "drive", "cycle", "skate", "ski", "surf", "dive", "row", "sail"
+        ];
+        
+        // 名詞句子模板（小學一年級難度）
+        const nounTemplates = [
             (word) => `What is a ${word}?`,
-            (word) => `When do you use a ${word}?`,
-            (word) => `How do you use a ${word}?`,
-            (word) => `Which ${word} do you like?`,
             (word) => `Where is the ${word}?`,
-            (word) => `Why do you need a ${word}?`,
-            (word) => `What color is the ${word}?`,
+            (word) => `Do you have a ${word}?`,
             (word) => `Do you like the ${word}?`,
             (word) => `Can you see the ${word}?`,
-            (word) => `Is this a ${word}?`
+            (word) => `What color is the ${word}?`,
+            (word) => `Is this a ${word}?`,
+            (word) => `Do you use a ${word}?`,
+            (word) => `Who has a ${word}?`,
+            (word) => `When do you use a ${word}?`
+        ];
+        
+        // 形容詞句子模板（小學一年級難度）
+        const adjectiveTemplates = [
+            (word) => `Are you ${word}?`,
+            (word) => `Is it ${word}?`,
+            (word) => `Do you feel ${word}?`,
+            (word) => `Why are you ${word}?`,
+            (word) => `When are you ${word}?`,
+            (word) => `Look ${word}!`,
+            (word) => `Be ${word}!`,
+            (word) => `Stay ${word}!`,
+            (word) => `Is he ${word}?`,
+            (word) => `Is she ${word}?`
+        ];
+        
+        // 動詞句子模板（小學一年級難度）
+        const verbTemplates = [
+            (word) => `Can you ${word}?`,
+            (word) => `Do you ${word}?`,
+            (word) => `Let's ${word}!`,
+            (word) => `Please ${word}.`,
+            (word) => `Don't ${word}.`,
+            (word) => `How to ${word}?`,
+            (word) => `When do you ${word}?`,
+            (word) => `Where do you ${word}?`,
+            (word) => `Who can ${word}?`,
+            (word) => `Time to ${word}!`
         ];
 
-        // 生成隨機問題句子
+        // 判斷單詞類型並生成對應的句子
         function generateQuestion(word) {
             // 只對英文單詞生成問題
-            if (/^[a-zA-Z\s]+$/.test(word)) {
-                const randomTemplate = sentenceTemplates[Math.floor(Math.random() * sentenceTemplates.length)];
-                return randomTemplate(word.toLowerCase());
+            if (!/^[a-zA-Z\s]+$/.test(word)) {
+                return "";
             }
-            return "";
+            
+            const lowerWord = word.toLowerCase().trim();
+            let templates = nounTemplates; // 預設為名詞
+            
+            // 判斷是否為形容詞
+            if (adjectives.includes(lowerWord)) {
+                templates = adjectiveTemplates;
+            }
+            // 判斷是否為動詞
+            else if (verbs.includes(lowerWord)) {
+                templates = verbTemplates;
+            }
+            
+            const randomTemplate = templates[Math.floor(Math.random() * templates.length)];
+            return randomTemplate(lowerWord);
         }
 
         // 高亮顯示問題中的單詞
