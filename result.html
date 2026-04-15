@@ -973,7 +973,7 @@
         let isHideMode = false;
         let isRandomMode = false;
         let isAnswerShown = false;
-        let isIframeVisible = false; // iframe 顯示狀態
+        let isIframeVisible = true; // iframe 顯示狀態 - 默認自動打開
         let pronouncedWords = []; // 記錄已發音的單詞索引
         let randomReviewChance = 0.05; // 5% 機率隨機複習已發音的單詞
         let shuffledIndices = []; // 隨機模式下的索引順序
@@ -1079,8 +1079,9 @@
             return question.replace(regex, (match) => `<span class="highlight">${match}</span>`);
         }
 
-        // 初始化 iframe 為隱藏狀態
-        document.querySelector('.iframe-card').classList.add('hidden');
+        // 初始化 iframe 為可見狀態（自動打開）
+        document.querySelector('.iframe-card').classList.remove('hidden');
+        document.querySelector('.iframe-card').classList.add('visible');
         
         // 初始化隨機索引陣列
         function initShuffledIndices() {
@@ -1144,12 +1145,13 @@
                 contentDiv.textContent = currentItem;
             }
             
-            // 切換單詞時隱藏 iframe
-            isIframeVisible = false;
-            iframeCard.classList.remove('visible');
-            iframeCard.classList.add('hidden');
+            // 切換單詞時保持 iframe 可見（自動打開模式）
+            if (isIframeVisible) {
+                iframeCard.classList.remove('hidden');
+                iframeCard.classList.add('visible');
+            }
             
-            // 更新 iframe 圖片搜索 URL（在隱藏狀態下加載）
+            // 更新 iframe 圖片搜索 URL
             updateImageSearch(currentItem);
         }
 
