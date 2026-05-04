@@ -320,8 +320,10 @@
             this.classList.toggle('active');
             document.getElementById('btn1').classList.remove('active');
             document.getElementById('btn2').classList.remove('active');
-            // 跳轉到數學頁面
-            window.location.href = 'math.html';
+            // 根據年級選擇決定難度
+            const selectValue = document.getElementById('optionSelect').value;
+            const k = selectValue === '3' ? '3' : '2';
+            window.location.href = `math.html?k=${k}`;
         });
 
         // 跳轉
