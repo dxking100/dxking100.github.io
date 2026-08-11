@@ -348,34 +348,92 @@
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
 
-        // 生成數學題
+        // 生成數學題（支持連加、連減、加減混合，最多 3 個數）
         function generateQuestion() {
-            const type = getRandomInt(1, 2); // 1: 加法，2: 減法
-            let question, answer;
             const m = maxNum;
+            while (true) {
+                const termCount = getRandomInt(2, 3); // 2 或 3 個數
+                const type = getRandomInt(1, 3); // 1: 連加，2: 連減，3: 加減混合
+                let ops;
+                if (type === 1) {
+                    ops = Array(termCount - 1).fill('+');
+                } else if (type === 2) {
+                    ops = Array(termCount - 1).fill('-');
+                } else {
+                    ops = [];
+                    for (let i = 1; i < termCount; i++) {
+                        ops.push(getRandomInt(0, 1) === 0 ? '+' : '-');
+                    }
+                }
 
-            if (type === 1) {
-                // 加法：兩數相加不超過 maxNum
-                const num1 = getRandomInt(1, m - 1);
-                const num2 = getRandomInt(1, m - num1);
-                question = `${num1} + ${num2} = ?`;
-                answer = num1 + num2;
-            } else {
-                // 減法：被減數不超過 maxNum，結果非負
-                const num1 = getRandomInt(1, m);
-                const num2 = getRandomInt(1, num1);
-                question = `${num1} - ${num2} = ?`;
-                answer = num1 - num2;
+                // 逐步生成數字，保證每步結果非負且不超過 maxNum
+                let nums = [];
+                let value = 0;
+                let ok = true;
+
+                if (type === 1) {
+                    // 連加：總和不超過 maxNum
+                    const num1 = getRandomInt(1, m - termCount + 1);
+                    nums.push(num1);
+                    value = num1;
+                    for (let i = 1; i < termCount; i++) {
+                        const maxAdd = m - value - (termCount - 1 - i);
+                        if (maxAdd < 1) { ok = false; break; }
+                        const n = getRandomInt(1, maxAdd);
+                        nums.push(n);
+                        value += n;
+                    }
+                } else if (type === 2) {
+                    // 連減：結果非負
+                    const num1 = getRandomInt(termCount, m);
+                    nums.push(num1);
+                    value = num1;
+                    for (let i = 1; i < termCount; i++) {
+                        const maxSub = value - (termCount - 1 - i);
+                        if (maxSub < 1) { ok = false; break; }
+                        const n = getRandomInt(1, maxSub);
+                        nums.push(n);
+                        value -= n;
+                    }
+                } else {
+                    // 加減混合：隨機運算符，中間結果與最終結果均非負、不超過 maxNum
+                    const num1 = getRandomInt(1, m);
+                    nums.push(num1);
+                    value = num1;
+                    for (let i = 0; i < termCount - 1; i++) {
+                        const remaining = termCount - 2 - i;
+                        if (ops[i] === '+') {
+                            const maxAdd = m - value - remaining;
+                            if (maxAdd < 1) { ok = false; break; }
+                            const n = getRandomInt(1, maxAdd);
+                            nums.push(n);
+                            value += n;
+                        } else {
+                            const maxSub = value - remaining;
+                            if (maxSub < 1) { ok = false; break; }
+                            const n = getRandomInt(1, maxSub);
+                            nums.push(n);
+                            value -= n;
+                        }
+                    }
+                }
+
+                if (ok) {
+                    let question = String(nums[0]);
+                    for (let i = 1; i < nums.length; i++) {
+                        question += ` ${ops[i - 1]} ${nums[i]}`;
+                    }
+                    question += ' = ?';
+                    return { question, answer: value };
+                }
             }
-
-            return { question, answer };
         }
 
-        // 生成 20 條題目
+        // 生成 30 條題目
         function generateQuestions() {
             questions = [];
             answers = [];
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < 30; i++) {
                 const q = generateQuestion();
                 questions.push(q.question);
                 answers.push(q.answer);
