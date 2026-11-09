@@ -271,6 +271,27 @@
                 <option value="4">🌻 Level 1</option>
                 <option value="5">🌼 Level 2</option>
             </select>
+            <select id="categorySelect" class="grade-selector" aria-label="選擇分類" style="margin-left: 10px; margin-top: 10px;">
+                <option value="all">📚 全部</option>
+                <option value="fruits">🍎 水果 Fruits</option>
+                <option value="vegetables">🥕 蔬菜 Vegetables</option>
+                <option value="colours">🎨 颜色 Colours</option>
+                <option value="animals">🐾 动物 Animals</option>
+                <option value="numbers">🔢 数字 Numbers</option>
+                <option value="bodyparts">🫀 身体部位 Body Parts</option>
+                <option value="tableware">🍽️ 餐具 Tableware</option>
+                <option value="feelings">😊 感觉 Feelings</option>
+                <option value="adjectives">📏 形容 Adjectives</option>
+                <option value="weather">🌤️ 天气 Weather</option>
+                <option value="stationery">✏️ 文具 Stationery</option>
+                <option value="days">📅 星期 Days of the Week</option>
+                <option value="comparatives">⚖️ 比较词 Comparatives</option>
+                <option value="buildings">🏠 建筑物 Buildings</option>
+                <option value="plants">🌱 植物 Plants</option>
+                <option value="transport">🚌 交通工具 Transport</option>
+                <option value="actions">🏃 动作 Actions</option>
+                <option value="appliances">💡 电器 Appliances</option>
+            </select>
         </header>
 
         <!-- 按鈕區域 -->
@@ -329,9 +350,10 @@
         // 跳轉
         function jump(){
             const selectValue = document.getElementById('optionSelect').value;
+            const categoryValue = document.getElementById('categorySelect').value;
             const languageValue = document.getElementById('btn1').classList.contains('active') ? '中' : '英';
 
-            const url = `result.html?selectValue=${selectValue}&languageValue=${languageValue}`;
+            const url = `result.html?selectValue=${selectValue}&languageValue=${languageValue}&category=${categoryValue}`;
             window.location.href = url;
         }
     </script>

@@ -582,8 +582,31 @@
         const urlParams = new URLSearchParams(queryString);
         const selectValue = urlParams.get('selectValue');
         const languageValue = urlParams.get('languageValue');
+        const categoryValue = urlParams.get('category') || 'all';
 
         let isChinese = false;
+
+        // 分類單詞庫
+        const categoryWords = {
+            fruits: ["apple", "banana", "orange", "grape", "watermelon", "mango", "pear", "lemon", "peach", "strawberry", "cherry", "pineapple", "kiwi"],
+            vegetables: ["carrot", "potato", "tomato", "onion", "cabbage", "broccoli", "corn", "pea", "mushroom", "cucumber", "lettuce"],
+            colours: ["red", "blue", "yellow", "green", "orange", "purple", "pink", "black", "white", "brown"],
+            animals: ["cat", "dog", "bird", "fish", "rabbit", "tiger", "lion", "elephant", "monkey", "bear", "cow", "pig", "horse", "sheep", "duck", "chicken", "panda", "giraffe", "zebra", "kangaroo", "crocodile", "dolphin"],
+            numbers: ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty"],
+            bodyparts: ["head", "eye", "ear", "nose", "mouth", "hand", "foot", "arm", "leg", "finger", "hair", "face", "neck", "shoulder", "knee", "toe"],
+            tableware: ["bowl", "plate", "spoon", "fork", "cup", "bottle"],
+            feelings: ["happy", "sad", "angry", "scared", "excited", "tired", "hungry", "surprised", "shy", "proud"],
+            adjectives: ["big", "small", "tall", "short", "fast", "slow", "hot", "cold", "clean", "dirty", "fat", "thin"],
+            weather: ["sunny", "rainy", "cloudy", "windy", "hot", "cold", "warm", "stormy", "foggy"],
+            stationery: ["book", "pencil", "ruler", "bag", "eraser", "crayon", "scissors", "glue", "pencil case"],
+            days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+            comparatives: ["big", "small", "tall", "short", "fast", "slow", "hot", "cold", "old", "young", "long", "short"],
+            buildings: ["school", "hospital", "park", "library", "playground", "supermarket", "restaurant", "bank", "market", "house", "cupboard"],
+            plants: ["tree", "flower", "leaf", "grass"],
+            transport: ["bus", "car", "train", "taxi", "bicycle", "boat", "aeroplane", "ferry", "lorry", "motorcycle", "ship"],
+            actions: ["eat", "drink", "sleep", "run", "walk", "jump", "swim", "read", "write", "play", "sit", "stand", "draw", "sing", "dance", "climb"],
+            appliances: ["TV", "fridge", "lamp", "phone", "computer", "light"]
+        };
 
         // 單字庫
         let level1_eng = [
@@ -985,7 +1008,10 @@
         ];
 
         let items = [];
-        if(selectValue ==='2' && languageValue==='英'){
+        if (categoryValue !== 'all' && categoryWords[categoryValue]) {
+            items = categoryWords[categoryValue];
+            isChinese = false;
+        } else if(selectValue ==='2' && languageValue==='英'){
             items = k2_eng;
             isChinese = false;
         }else  if(selectValue ==='2' && languageValue==='中'){
