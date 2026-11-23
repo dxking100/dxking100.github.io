@@ -216,6 +216,17 @@
             100% { transform: scale(1); }
         }
 
+        /* 未全亮就按「下一個」時的搖晃提示 */
+        @keyframes denyShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .deny-shake {
+            animation: denyShake 0.4s ease;
+        }
+
         .word-display {
             display: flex;
             flex-direction: column;
@@ -1103,7 +1114,39 @@
             if (!span) return;
             span.classList.toggle('lit');
             playClickSound();
+            // 全部高亮完成 → 自動朗讀單詞一次
+            if (span.classList.contains('lit') && allLettersLit()) {
+                speakCurrentWord();
+            }
         });
+
+        // 當前單詞是否全部字母都已高亮
+        function allLettersLit() {
+            const spans = document.querySelectorAll('#content .letter-span');
+            if (spans.length === 0) return true;
+            for (const s of spans) {
+                if (!s.classList.contains('lit')) return false;
+            }
+            return true;
+        }
+
+        // 朗讀當前單詞
+        function speakCurrentWord() {
+            const utterance = new SpeechSynthesisUtterance(items[currentIndex]);
+            utterance.lang = isChinese ? 'zh-HK' : 'en-US';
+            utterance.rate = 0.9;
+            utterance.pitch = 1.1;
+            speechSynthesis.speak(utterance);
+        }
+
+        // 未全亮就按「下一個」：搖晃單詞卡提示
+        function denyNext() {
+            const card = document.querySelector('.text-card');
+            card.classList.remove('deny-shake');
+            void card.offsetHeight;
+            card.classList.add('deny-shake');
+            playClickSound();
+        }
 
         // 更新圖片搜索 iframe
         function updateImageSearch(word) {
@@ -1145,6 +1188,11 @@
         });
 
         document.getElementById('next').addEventListener('click', function() {
+            // 必須全部字母高亮後才能進入下一個
+            if (!allLettersLit()) {
+                denyNext();
+                return;
+            }
             if (currentIndex < items.length - 1) {
                 currentIndex++;
                 updateContent();
@@ -1211,7 +1259,9 @@
                     updateContent();
                 }
             } else if (e.code === 'ArrowRight') {
-                if (currentIndex < items.length - 1) {
+                if (!allLettersLit()) {
+                    denyNext();
+                } else if (currentIndex < items.length - 1) {
                     currentIndex++;
                     updateContent();
                 }
