@@ -58,7 +58,7 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: clamp(12px, 2.5vmin, 25px);
             position: relative;
             z-index: 1;
             height: 100%;
@@ -70,18 +70,18 @@
             background: linear-gradient(135deg, #a8e6cf 0%, #88d8b0 100%);
             border: 4px solid #fff;
             border-radius: 25px;
-            padding: 10px 20px;
-            font-size: 1.3em;
+            padding: clamp(6px, 1.6vmin, 10px) clamp(12px, 2.6vmin, 20px);
+            font-size: clamp(1em, 2.4vmin, 1.3em);
             font-family: inherit;
             font-weight: bold;
             color: #1e5631;
             cursor: pointer;
             transition: all 0.3s;
-            min-width: 60px;
+            min-width: clamp(45px, 7vmin, 60px);
             box-shadow: 0 5px 15px rgba(168, 230, 207, 0.4);
             position: fixed;
-            top: 18px;
-            left: 18px;
+            top: clamp(10px, 2vmin, 18px);
+            left: clamp(10px, 2vmin, 18px);
             z-index: 50;
         }
 
@@ -95,7 +95,7 @@
         }
 
         .header-title {
-            font-size: 1.5em;
+            font-size: clamp(1.1rem, 3vmin, 1.5rem);
             color: #fff;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
             animation: bounce 2s ease-in-out infinite;
@@ -121,9 +121,9 @@
             display: grid;
             grid-template-columns: 1fr;
             grid-template-rows: 1fr;
-            gap: 20px;
+            gap: clamp(12px, 2vmin, 20px);
             width: 100%;
-            max-width: 1000px;
+            max-width: min(1100px, 100%);
             margin: 0 auto;
             height: 100%;
         }
@@ -131,8 +131,8 @@
         /* 卡片樣式 */
         .card {
             background: rgba(255, 255, 255, 0.95);
-            border-radius: 30px;
-            padding: 30px;
+            border-radius: clamp(18px, 3.5vmin, 35px);
+            padding: clamp(12px, 2.5vmin, 20px);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -156,7 +156,7 @@
 
 
         #content {
-            font-size: 10em;
+            font-size: clamp(2.5rem, 24vmin, 10rem);
             font-weight: bold;
             text-align: center;
             animation: contentPop 0.5s ease;
@@ -223,8 +223,8 @@
 
         /* 文字卡內嵌圖片框：裁切顯示一張圖 */
         .word-image-box {
-            width: clamp(150px, 30vmin, 280px);
-            height: clamp(110px, 22vmin, 200px);
+            width: clamp(120px, 28vmin, 300px);
+            height: clamp(90px, 20vmin, 210px);
             border-radius: 18px;
             overflow: hidden;
             background: #fff;
@@ -253,13 +253,13 @@
             background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
             border: 4px solid #ff9a9e;
             border-radius: 25px;
-            padding: 10px 20px;
-            font-size: 1.3em;
+            padding: clamp(6px, 1.6vmin, 10px) clamp(12px, 2.6vmin, 20px);
+            font-size: clamp(1em, 2.4vmin, 1.3em);
             font-family: inherit;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
-            min-width: 60px;
+            min-width: clamp(45px, 7vmin, 60px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
@@ -290,8 +290,8 @@
         footer {
             background: linear-gradient(135deg, #a8e6cf 0%, #88d8b0 100%);
             border-radius: 30px;
-            padding: 20px;
-            margin-top: 20px;
+            padding: clamp(14px, 2.5vmin, 20px);
+            margin-top: clamp(12px, 2vmin, 20px);
             box-shadow: 0 10px 30px rgba(168, 230, 207, 0.4);
             border: 4px solid #fff;
         }
@@ -299,21 +299,22 @@
         .btn-row {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: clamp(10px, 2.5vmin, 20px);
             align-items: center;
+            flex-wrap: wrap;
         }
 
         /* ===== 單字進度條 ===== */
         .progress-area {
             display: flex;
             align-items: center;
-            gap: 14px;
-            margin-bottom: 16px;
+            gap: clamp(10px, 2vmin, 14px);
+            margin-bottom: clamp(12px, 2vmin, 16px);
         }
 
         .progress-track {
             flex: 1;
-            height: 26px;
+            height: clamp(18px, 3.2vmin, 26px);
             background: rgba(255, 255, 255, 0.65);
             border: 3px solid #fff;
             border-radius: 999px;
@@ -336,7 +337,7 @@
             top: 50%;
             right: 0;
             transform: translate(50%, -50%);
-            font-size: 1.5em;
+            font-size: clamp(16px, 3.4vmin, 24px);
             line-height: 1;
             filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.9));
             animation: starFollow 1.2s ease-in-out infinite;
@@ -349,149 +350,16 @@
         }
 
         .progress-text {
-            font-size: 1.2em;
+            font-size: clamp(0.9em, 2.2vmin, 1.2em);
             font-weight: bold;
             color: #1e5631;
-            min-width: 110px;
+            min-width: clamp(74px, 13vmin, 110px);
             text-align: center;
             text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7);
             white-space: nowrap;
         }
 
-        /* ========== iPad 橫屏優化 ========== */
-        @media (min-width: 1024px) and (orientation: landscape) {
-            .container {
-                padding: 25px;
-            }
-
-            .cards-container {
-                grid-template-columns: 1fr;
-                grid-template-rows: 1fr;
-                gap: 18px;
-                max-width: 1100px;
-            }
-
-            .card {
-                border-radius: 35px;
-                padding: 20px;
-            }
-
-            #content {
-                font-size: 9.2em;
-            }
-        }
-
-        /* ========== iPad 豎屏優化 ========== */
-        @media (max-width: 1024px) and (orientation: portrait) {
-            .container {
-                padding: 15px;
-            }
-
-            .cards-container {
-                grid-template-columns: 1fr;
-                grid-template-rows: 1fr;
-                gap: 15px;
-                max-width: 100%;
-            }
-
-            .card {
-                border-radius: 25px;
-                padding: 18px;
-            }
-
-            #content {
-                font-size: 8em;
-            }
-
-            footer {
-                margin-top: 15px;
-            }
-        }
-
-        /* ========== 手機優化 ========== */
-        @media (max-width: 768px) {
-            .container {
-                padding: 12px;
-            }
-
-            .cards-container {
-                grid-template-columns: 1fr;
-                grid-template-rows: 1fr;
-                gap: 12px;
-            }
-
-            .card {
-                border-radius: 20px;
-                padding: 14px;
-            }
-
-            #content {
-                font-size: 6em;
-            }
-
-            .control-btn {
-                min-width: 50px;
-                padding: 8px 15px;
-                font-size: 1.1em;
-            }
-
-            .progress-area {
-                gap: 10px;
-                margin-bottom: 12px;
-            }
-
-            .progress-track {
-                height: 20px;
-            }
-
-            .progress-fill::after {
-                font-size: 1.25em;
-            }
-
-            .progress-text {
-                font-size: 1em;
-                min-width: 86px;
-            }
-
-            .btn-row {
-                flex-wrap: wrap;
-                gap: 12px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .card {
-                border-radius: 18px;
-                padding: 12px;
-            }
-
-            #content {
-                font-size: 4.5em;
-            }
-
-            .control-btn {
-                min-width: 45px;
-                padding: 6px 12px;
-                font-size: 1em;
-            }
-
-            .back-btn {
-                padding: 8px 15px;
-                font-size: 1em;
-                top: 10px;
-                left: 10px;
-            }
-
-            .progress-text {
-                font-size: 0.9em;
-                min-width: 74px;
-            }
-
-            .btn-row {
-                flex-wrap: wrap;
-                gap: 10px;
-            }
-        }
+        /* 全裝置自適應：所有尺寸以 clamp() 流體縮放，不再需要媒體查詢覆寫 */
     </style>
 </head>
 <body>
@@ -1045,6 +913,9 @@
 
             // 更新圖片搜索 URL（文字卡內嵌圖片框）
             updateImageSearch(currentItem);
+
+            // 自適應：若單詞超出卡片高度則自動縮小字級
+            fitContent();
         }
 
         // 更新單字進度條（第幾個 / 共幾個）
@@ -1119,6 +990,29 @@
             imageFrame.src = searchUrl;
             // iframe 已通過 CSS transform: translateY(-150px) 實現向下偏移 150px
         }
+
+        // 自適應兑底：單詞（含圖片框）超出文字卡可用高度時，逐步縮小字級
+        function fitContent() {
+            const card = document.querySelector('.text-card');
+            const wrap = card ? card.querySelector('.word-display') : null;
+            const contentDiv = document.getElementById('content');
+            if (!card || !wrap || !contentDiv) return;
+
+            // 先還原為 clamp() 流體字級，再視需要縮小
+            contentDiv.style.fontSize = '';
+            const cs = getComputedStyle(card);
+            const avail = card.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+            let size = parseFloat(getComputedStyle(contentDiv).fontSize);
+            let guard = 0;
+            while (guard++ < 14 && wrap.offsetHeight > avail + 2 && size > 16) {
+                size = Math.max(16, size * 0.9);
+                contentDiv.style.fontSize = size + 'px';
+            }
+        }
+
+        // 視窗大小／螢幕方向改變時重新自適應
+        window.addEventListener('resize', fitContent);
+        window.addEventListener('orientationchange', fitContent);
 
         // 顯示/隱藏圖片按鈕（文字卡內嵌圖片框）
         document.getElementById('showAnswer').addEventListener('click', function() {
