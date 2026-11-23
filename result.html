@@ -79,6 +79,10 @@
             transition: all 0.3s;
             min-width: 60px;
             box-shadow: 0 5px 15px rgba(168, 230, 207, 0.4);
+            position: fixed;
+            top: 18px;
+            left: 18px;
+            z-index: 50;
         }
 
         .back-btn:hover {
@@ -454,6 +458,8 @@
             .back-btn {
                 padding: 8px 15px;
                 font-size: 1em;
+                top: 10px;
+                left: 10px;
             }
 
             .progress-text {
@@ -476,6 +482,10 @@
     <div class="star" style="top: 80%; right: 10%; animation-delay: 1.5s;">🌟</div>
 
     <div class="container">
+        <!-- 返回按鈕（左上角固定） -->
+        <button id="back" class="back-btn">
+            ⬅️
+        </button>
         <!-- 中部卡片區域 -->
         <main>
             <div class="cards-container">
@@ -504,9 +514,6 @@
                 <span id="progressText" class="progress-text">0 / 0</span>
             </div>
             <div class="btn-row">
-                <button id="back" class="back-btn">
-                    ⬅️
-                </button>
                 <button id="prev" class="control-btn">
                     ⏮️
                 </button>
