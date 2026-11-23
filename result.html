@@ -144,10 +144,10 @@
             box-shadow: 0 20px 60px rgba(0,0,0,0.18);
         }
 
-        /* 文字卡片 */
+        /* 文字卡片：黑色虛線框 + 白色內部 */
         .text-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 240, 245, 0.95) 100%);
-            border-color: #ff9a9e;
+            background: #fff;
+            border: 5px dashed #000;
         }
 
         /* iframe 卡片 */
@@ -171,13 +171,15 @@
             visibility: visible;
         }
 
+        /* 上方提示單詞 */
         #content {
-            font-size: 6em;
+            font-size: clamp(2rem, 6vmin, 4rem);
             font-weight: bold;
             text-align: center;
+            color: #222;
             animation: contentPop 0.5s ease;
             word-break: break-word;
-            line-height: 1.3;
+            line-height: 1.2;
         }
 
         .word-display {
@@ -185,7 +187,127 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            gap: clamp(8px, 1.6vmin, 18px);
             width: 100%;
+        }
+
+        /* ===== 拖入區：黑色虛線框 + 白色內部 ===== */
+        .drop-box {
+            border: 4px dashed #000;
+            background: #fff;
+            border-radius: 20px;
+            padding: clamp(10px, 2vmin, 20px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: border-color 0.3s ease, background 0.3s ease;
+        }
+
+        .drop-box.success {
+            border-color: #2ecc71;
+            background: #f0fff5;
+            animation: successPop 0.5s ease;
+        }
+
+        .drop-box.wrong {
+            border-color: #ff4757;
+            animation: shake 0.4s ease;
+        }
+
+        @keyframes successPop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        .slots-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: clamp(6px, 1.2vmin, 14px);
+        }
+
+        .slot {
+            width: clamp(42px, 7vmin, 78px);
+            height: clamp(42px, 7vmin, 78px);
+            border: 3px dashed #999;
+            border-radius: 14px;
+            background: #fafafa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 片語中的空格分隔 */
+        .slot-gap {
+            width: clamp(14px, 2.5vmin, 28px);
+        }
+
+        /* ===== 下方可拖動字母區 ===== */
+        .letter-bank {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: clamp(6px, 1.2vmin, 14px);
+            min-height: clamp(42px, 7vmin, 78px);
+        }
+
+        .letter-tile {
+            width: clamp(42px, 7vmin, 78px);
+            height: clamp(42px, 7vmin, 78px);
+            border-radius: 14px;
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            border: 3px solid #fff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: clamp(22px, 4vmin, 44px);
+            font-weight: bold;
+            color: #333;
+            cursor: grab;
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .letter-tile.selected {
+            transform: scale(1.12);
+            box-shadow: 0 0 0 4px #ff9a9e, 0 8px 20px rgba(0,0,0,0.25);
+        }
+
+        .letter-tile.dragging {
+            opacity: 0.35;
+        }
+
+        .letter-tile.placed {
+            background: linear-gradient(135deg, #89c4f4 0%, #6bb3e0 100%);
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .drop-box.success .letter-tile.placed {
+            background: linear-gradient(135deg, #a8e6cf 0%, #2ecc71 100%);
+        }
+
+        /* 拖動時跟隨手指的浮動副本 */
+        .letter-tile.ghost {
+            position: fixed;
+            z-index: 9999;
+            margin: 0;
+            pointer-events: none;
+            transform: scale(1.1) rotate(-3deg);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+            opacity: 1;
         }
 
         @keyframes contentPop {
@@ -289,9 +411,6 @@
                 padding: 12px;
             }
 
-            #content {
-                font-size: 5.4em;
-            }
         }
 
         /* ========== iPad 豎屏優化 ========== */
@@ -316,9 +435,6 @@
                 padding: 12px;
             }
 
-            #content {
-                font-size: 4.8em;
-            }
 
             footer {
                 margin-top: 15px;
@@ -346,9 +462,6 @@
                 padding: 10px;
             }
 
-            #content {
-                font-size: 3.6em;
-            }
 
             .control-btn {
                 min-width: 50px;
@@ -368,9 +481,6 @@
                 padding: 12px;
             }
 
-            #content {
-                font-size: 2.64em;
-            }
 
             .control-btn {
                 min-width: 45px;
@@ -407,10 +517,17 @@
                         <iframe id="imageFrame" src="" title="圖片搜索"></iframe>
                     </div>
                 </div>
-                <!-- 文字卡片（下方，佔 7） -->
+                <!-- 文字卡片（下方，佔 7）：黑色虛線框 + 白色內部 -->
                 <div class="card text-card">
                     <div class="word-display">
+                        <!-- 上方：提示單詞 -->
                         <div id="content"></div>
+                        <!-- 中間：黑色虛線拖入框 -->
+                        <div id="dropBox" class="drop-box">
+                            <div id="slots" class="slots-row"></div>
+                        </div>
+                        <!-- 下方：可拖動字母 -->
+                        <div id="letterBank" class="letter-bank"></div>
                     </div>
                 </div>
             </div>
@@ -932,8 +1049,11 @@
             contentDiv.offsetHeight; // 觸發重繪
             contentDiv.style.animation = 'contentPop 0.5s ease';
             
-            // 直接顯示單詞
+            // 直接顯示單詞（上方提示）
             contentDiv.textContent = currentItem;
+
+            // 建立／清除下方拖動拼字區
+            setupSpelling(currentItem);
             
             // 切換單詞時保持 iframe 可見（自動打開模式）
             if (isIframeVisible) {
@@ -951,6 +1071,215 @@
             const searchUrl = `https://www.bing.com/images/search?q=${encodeURIComponent(word)}+Cartoon+Png&form=IRTRRL&first=1`;
             imageFrame.src = searchUrl;
             // iframe 已通過 CSS transform: translateY(-150px) 實現向下偏移 150px
+        }
+
+        // ===== 拖動拼字遊戲（iPad 觸控：Pointer Events） =====
+        let selectedTile = null;   // 輕點選中的字母磚
+        let dragState = null;      // 目前拖動狀態
+        let spellingSolved = false;
+
+        function setupSpelling(word) {
+            const dropBox = document.getElementById('dropBox');
+            const bank = document.getElementById('letterBank');
+            selectedTile = null;
+            spellingSolved = false;
+
+            // 只有純英文單詞／片語才啟用拖動拼字，中文只顯示文字
+            if (!isChinese && /^[a-zA-Z\s]+$/.test(word)) {
+                dropBox.style.display = '';
+                bank.style.display = '';
+                buildSpelling(word);
+            } else {
+                dropBox.style.display = 'none';
+                bank.style.display = 'none';
+            }
+        }
+
+        function buildSpelling(word) {
+            const slotsRow = document.getElementById('slots');
+            const bank = document.getElementById('letterBank');
+            const dropBox = document.getElementById('dropBox');
+            slotsRow.innerHTML = '';
+            bank.innerHTML = '';
+            dropBox.classList.remove('success', 'wrong');
+
+            const letters = [];
+            for (const ch of word) {
+                if (ch === ' ') {
+                    // 片語中的空格：固定分隔，不可拖
+                    const gap = document.createElement('div');
+                    gap.className = 'slot-gap';
+                    slotsRow.appendChild(gap);
+                    continue;
+                }
+                if (!/[a-zA-Z]/.test(ch)) continue;
+                letters.push(ch);
+                const slot = document.createElement('div');
+                slot.className = 'slot';
+                slot.dataset.answer = ch.toLowerCase();
+                slotsRow.appendChild(slot);
+            }
+
+            // 打亂字母後放到下方字母區
+            const shuffled = letters.slice();
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            shuffled.forEach(ch => bank.appendChild(createTile(ch)));
+        }
+
+        function createTile(ch) {
+            const tile = document.createElement('div');
+            tile.className = 'letter-tile';
+            tile.textContent = ch;
+            tile.dataset.letter = ch.toLowerCase();
+            attachTileDrag(tile);
+            return tile;
+        }
+
+        function attachTileDrag(tile) {
+            tile.addEventListener('pointerdown', function(e) {
+                if (spellingSolved) return;
+                e.preventDefault();
+                const rect = tile.getBoundingClientRect();
+
+                // 建立跟隨手指的浮動副本
+                const ghost = tile.cloneNode(true);
+                ghost.classList.add('ghost');
+                ghost.style.width = rect.width + 'px';
+                ghost.style.height = rect.height + 'px';
+                ghost.style.left = rect.left + 'px';
+                ghost.style.top = rect.top + 'px';
+                document.body.appendChild(ghost);
+
+                dragState = {
+                    tile: tile,
+                    ghost: ghost,
+                    originLeft: rect.left,
+                    originTop: rect.top,
+                    startX: e.clientX,
+                    startY: e.clientY,
+                    moved: false
+                };
+                tile.classList.add('dragging');
+                try { tile.setPointerCapture(e.pointerId); } catch (err) {}
+            });
+
+            tile.addEventListener('pointermove', function(e) {
+                if (!dragState || dragState.tile !== tile) return;
+                const dx = e.clientX - dragState.startX;
+                const dy = e.clientY - dragState.startY;
+                if (Math.abs(dx) > 6 || Math.abs(dy) > 6) dragState.moved = true;
+                dragState.ghost.style.left = (dragState.originLeft + dx) + 'px';
+                dragState.ghost.style.top = (dragState.originTop + dy) + 'px';
+            });
+
+            tile.addEventListener('pointerup', function(e) {
+                if (!dragState || dragState.tile !== tile) return;
+                const wasDrag = dragState.moved;
+                const ghost = dragState.ghost;
+                dragState = null;
+                tile.classList.remove('dragging');
+                if (ghost && ghost.parentNode) ghost.parentNode.removeChild(ghost);
+
+                if (wasDrag) {
+                    // 放開手指：判斷是否落在空格上
+                    const el = document.elementFromPoint(e.clientX, e.clientY);
+                    const slot = el ? el.closest('.slot') : null;
+                    if (slot && !slot.firstElementChild) {
+                        placeTile(tile, slot);
+                    } else {
+                        returnToBank(tile);
+                    }
+                } else {
+                    // 輕點：已放入的取回，否則選中（再點空格即可放入）
+                    if (tile.parentElement && tile.parentElement.classList.contains('slot')) {
+                        returnToBank(tile);
+                    } else {
+                        toggleSelect(tile);
+                    }
+                }
+            });
+
+            tile.addEventListener('pointercancel', function() {
+                if (!dragState || dragState.tile !== tile) return;
+                const ghost = dragState.ghost;
+                dragState = null;
+                tile.classList.remove('dragging');
+                if (ghost && ghost.parentNode) ghost.parentNode.removeChild(ghost);
+            });
+        }
+
+        function clearSelection() {
+            if (selectedTile) selectedTile.classList.remove('selected');
+            selectedTile = null;
+        }
+
+        function toggleSelect(tile) {
+            if (selectedTile === tile) {
+                clearSelection();
+                return;
+            }
+            clearSelection();
+            selectedTile = tile;
+            tile.classList.add('selected');
+        }
+
+        function placeTile(tile, slot) {
+            clearSelection();
+            slot.appendChild(tile);
+            tile.classList.add('placed');
+            document.getElementById('dropBox').classList.remove('wrong');
+            playClickSound();
+            checkSpelling();
+        }
+
+        function returnToBank(tile) {
+            clearSelection();
+            tile.classList.remove('placed');
+            document.getElementById('letterBank').appendChild(tile);
+            document.getElementById('dropBox').classList.remove('success', 'wrong');
+            spellingSolved = false;
+        }
+
+        // 點空格：放入已選中的字母
+        document.getElementById('slots').addEventListener('click', function(e) {
+            if (spellingSolved) return;
+            if (e.target.closest('.letter-tile')) return; // 字母磚由 pointerup 處理
+            const slot = e.target.closest('.slot');
+            if (slot && !slot.firstElementChild && selectedTile) {
+                placeTile(selectedTile, slot);
+            }
+        });
+
+        function checkSpelling() {
+            const slots = Array.prototype.slice.call(document.querySelectorAll('#slots .slot'));
+            if (slots.length === 0) return;
+            if (slots.some(function(s) { return !s.firstElementChild; })) return;
+
+            const ok = slots.every(function(s) {
+                const t = s.firstElementChild;
+                return t && t.dataset.letter === s.dataset.answer;
+            });
+            const dropBox = document.getElementById('dropBox');
+            if (ok) {
+                spellingSolved = true;
+                dropBox.classList.remove('wrong');
+                dropBox.classList.add('success');
+                speakCurrentWord();
+            } else {
+                dropBox.classList.remove('success');
+                dropBox.classList.add('wrong');
+            }
+        }
+
+        function speakCurrentWord() {
+            const utterance = new SpeechSynthesisUtterance(items[currentIndex]);
+            utterance.lang = isChinese ? 'zh-HK' : 'en-US';
+            utterance.rate = 0.9;
+            utterance.pitch = 1.1;
+            speechSynthesis.speak(utterance);
         }
 
         // 顯示/隱藏圖片按鈕
