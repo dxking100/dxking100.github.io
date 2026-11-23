@@ -68,15 +68,16 @@
 
         .back-btn {
             background: linear-gradient(135deg, #a8e6cf 0%, #88d8b0 100%);
-            border: none;
-            border-radius: 20px;
+            border: 4px solid #fff;
+            border-radius: 25px;
             padding: 10px 20px;
-            font-size: 1em;
+            font-size: 1.3em;
             font-family: inherit;
             font-weight: bold;
             color: #1e5631;
             cursor: pointer;
             transition: all 0.3s;
+            min-width: 60px;
             box-shadow: 0 5px 15px rgba(168, 230, 207, 0.4);
         }
 
@@ -94,35 +95,6 @@
             color: #fff;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
             animation: bounce 2s ease-in-out infinite;
-        }
-
-        .hide-mode-label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.3);
-            padding: 8px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .hide-mode-label:hover {
-            background: rgba(255, 255, 255, 0.5);
-        }
-
-        #hideMode {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-            accent-color: #ff9a9e;
-        }
-
-        .hide-mode-text {
-            font-size: 0.9em;
-            color: #fff;
-            font-weight: bold;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
         }
 
         @keyframes bounce {
@@ -288,15 +260,6 @@
             border: 4px solid #fff;
         }
 
-        .footer-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.5);
-        }
-
         .btn-row {
             display: flex;
             justify-content: center;
@@ -324,10 +287,6 @@
 
             #content {
                 font-size: 5.4em;
-            }
-
-            .footer-top {
-                flex-direction: row;
             }
         }
 
@@ -365,10 +324,6 @@
 
             footer {
                 margin-top: 15px;
-            }
-
-            .footer-top {
-                flex-direction: row;
             }
         }
 
@@ -408,11 +363,6 @@
                 font-size: 1.1em;
             }
 
-            .footer-top {
-                flex-direction: column;
-                gap: 10px;
-            }
-
             .btn-row {
                 flex-wrap: wrap;
                 gap: 12px;
@@ -438,20 +388,7 @@
 
             .back-btn {
                 padding: 8px 15px;
-                font-size: 0.9em;
-            }
-
-            .hide-mode-label {
-                padding: 6px 10px;
-            }
-
-            .hide-mode-text {
-                font-size: 0.8em;
-            }
-
-            .footer-top {
-                flex-direction: column;
-                gap: 10px;
+                font-size: 1em;
             }
 
             .btn-row {
@@ -487,24 +424,12 @@
             </div>
         </main>
 
-        <!-- 底部按鈕 -->
+        <!-- 底部按鈕：返回與上一個/下一個同一行 -->
         <footer>
-            <div class="footer-top">
+            <div class="btn-row">
                 <button id="back" class="back-btn">
                     ⬅️
                 </button>
-                <div style="display: flex; gap: 15px;">
-                    <label class="hide-mode-label">
-                        <input type="checkbox" id="hideMode">
-                        <span class="hide-mode-text">隱藏模式</span>
-                    </label>
-                    <label class="hide-mode-label">
-                        <input type="checkbox" id="randomMode">
-                        <span class="hide-mode-text">隨機單詞</span>
-                    </label>
-                </div>
-            </div>
-            <div class="btn-row">
                 <button id="prev" class="control-btn">
                     ⏮️
                 </button>
@@ -995,52 +920,15 @@
         }
 
         let currentIndex = 0;
-        let isHideMode = false;
-        let isRandomMode = false;
-        let isAnswerShown = false;
         let isIframeVisible = true; // iframe 顯示狀態 - 默認自動打開
         let pronouncedWords = []; // 記錄已發音的單詞索引
-        let randomReviewChance = 0.05; // 5% 機率隨機複習已發音的單詞
-        let shuffledIndices = []; // 隨機模式下的索引順序
 
         // 初始化 iframe 為可見狀態（自動打開）
         document.querySelector('.iframe-card').classList.remove('hidden');
         document.querySelector('.iframe-card').classList.add('visible');
-        
-        // 初始化隨機索引陣列
-        function initShuffledIndices() {
-            shuffledIndices = items.map((_, i) => i);
-            for (let i = shuffledIndices.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [shuffledIndices[i], shuffledIndices[j]] = [shuffledIndices[j], shuffledIndices[i]];
-            }
-            currentIndex = shuffledIndices[0];
-        }
-        
-        initShuffledIndices();
-        updateContent();
 
-        // 隱藏單字中的隨機位數
-        function hideWord(word) {
-            if (word.length <= 2) {
-                return '_ '.repeat(word.length).trim();
-            }
-            // 隨機顯示 1-2 個字符
-            const showCount = Math.min(Math.floor(Math.random() * 2) + 1, word.length);
-            const indices = new Set();
-            while (indices.size < showCount) {
-                indices.add(Math.floor(Math.random() * word.length));
-            }
-            let result = '';
-            for (let i = 0; i < word.length; i++) {
-                if (indices.has(i)) {
-                    result += word[i] + ' ';
-                } else {
-                    result += '_ ';
-                }
-            }
-            return result.trim();
-        }
+        // 單詞按順序顯示，從第一個開始
+        updateContent();
 
         function updateContent() {
             const currentItem = items[currentIndex];
@@ -1052,12 +940,8 @@
             contentDiv.offsetHeight; // 觸發重繪
             contentDiv.style.animation = 'contentPop 0.5s ease';
             
-            // 根據隱藏模式和答案顯示狀態來顯示內容
-            if (isHideMode && !isAnswerShown) {
-                contentDiv.textContent = hideWord(currentItem);
-            } else {
-                contentDiv.textContent = currentItem;
-            }
+            // 直接顯示單詞
+            contentDiv.textContent = currentItem;
             
             // 切換單詞時保持 iframe 可見（自動打開模式）
             if (isIframeVisible) {
@@ -1077,34 +961,10 @@
             // iframe 已通過 CSS transform: translateY(-150px) 實現向下偏移 150px
         }
 
-        // 隱藏模式切換
-        document.getElementById('hideMode').addEventListener('change', function() {
-            isHideMode = this.checked;
-            isAnswerShown = false;
-            updateContent();
-        });
-
-        // 隨機模式切換
-        document.getElementById('randomMode').addEventListener('change', function() {
-            isRandomMode = this.checked;
-            if (isRandomMode) {
-                initShuffledIndices();
-            } else {
-                currentIndex = 0;
-            }
-            isAnswerShown = false;
-            updateContent();
-        });
-
-        // 顯示答案按鈕
+        // 顯示/隱藏圖片按鈕
         document.getElementById('showAnswer').addEventListener('click', function() {
             const iframeCard = document.querySelector('.iframe-card');
-            
-            if (isHideMode) {
-                isAnswerShown = !isAnswerShown;
-                updateContent();
-            }
-            
+
             // 切換 iframe 顯示狀態
             isIframeVisible = !isIframeVisible;
             if (isIframeVisible) {
@@ -1125,49 +985,18 @@
         });
 
         document.getElementById('prev').addEventListener('click', function() {
-            if (isRandomMode) {
-                // 隨機模式下使用洗牌後的索引
-                const currentShuffleIndex = shuffledIndices.indexOf(currentIndex);
-                if (currentShuffleIndex > 0) {
-                    currentIndex = shuffledIndices[currentShuffleIndex - 1];
-                    isAnswerShown = false;
-                    updateContent();
-                }
-            } else {
-                // 順序模式下直接遞減
-                if (currentIndex > 0) {
-                    currentIndex--;
-                    isAnswerShown = false;
-                    updateContent();
-                }
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateContent();
             }
             playClickSound();
         });
 
         document.getElementById('next').addEventListener('click', function() {
-            isAnswerShown = false;
-            
-            // 如果有已發音的單詞，且隨機數小於複習機率，則隨機選擇一個已發音的單詞
-            if (pronouncedWords.length > 0 && Math.random() < randomReviewChance) {
-                const randomIndex = Math.floor(Math.random() * pronouncedWords.length);
-                currentIndex = pronouncedWords[randomIndex];
-            } else {
-                // 否則正常進入下一個
-                if (isRandomMode) {
-                    // 隨機模式下使用洗牌後的索引
-                    const currentShuffleIndex = shuffledIndices.indexOf(currentIndex);
-                    if (currentShuffleIndex < shuffledIndices.length - 1) {
-                        currentIndex = shuffledIndices[currentShuffleIndex + 1];
-                    }
-                } else {
-                    // 順序模式下直接遞增
-                    if (currentIndex < items.length - 1) {
-                        currentIndex++;
-                    }
-                }
+            if (currentIndex < items.length - 1) {
+                currentIndex++;
+                updateContent();
             }
-            
-            updateContent();
             playClickSound();
         });
 
@@ -1225,50 +1054,25 @@
         // 鍵盤快捷鍵
         document.addEventListener('keydown', function(e) {
             if (e.code === 'ArrowLeft') {
-                if (isRandomMode) {
-                    const currentShuffleIndex = shuffledIndices.indexOf(currentIndex);
-                    if (currentShuffleIndex > 0) {
-                        currentIndex = shuffledIndices[currentShuffleIndex - 1];
-                        isAnswerShown = false;
-                        updateContent();
-                    }
-                } else {
-                    if (currentIndex > 0) {
-                        currentIndex--;
-                        isAnswerShown = false;
-                        updateContent();
-                    }
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    updateContent();
                 }
             } else if (e.code === 'ArrowRight') {
-                if (isRandomMode) {
-                    const currentShuffleIndex = shuffledIndices.indexOf(currentIndex);
-                    if (currentShuffleIndex < shuffledIndices.length - 1) {
-                        currentIndex = shuffledIndices[currentShuffleIndex + 1];
-                        isAnswerShown = false;
-                        updateContent();
-                    }
-                } else {
-                    if (currentIndex < items.length - 1) {
-                        currentIndex++;
-                        isAnswerShown = false;
-                        updateContent();
-                    }
+                if (currentIndex < items.length - 1) {
+                    currentIndex++;
+                    updateContent();
                 }
             } else if (e.code === 'Space') {
                 e.preventDefault();
-                if (isHideMode) {
-                    isAnswerShown = !isAnswerShown;
-                    updateContent();
-                } else {
-                    const utterance = new SpeechSynthesisUtterance(items[currentIndex]);
-                    utterance.lang = isChinese ? 'zh-HK' : 'en-US';
-                    utterance.rate = 0.9;
-                    utterance.pitch = 1.1;
-                    speechSynthesis.speak(utterance);
-                    // 將當前單詞加入已發音列表
-                    if (!pronouncedWords.includes(currentIndex)) {
-                        pronouncedWords.push(currentIndex);
-                    }
+                const utterance = new SpeechSynthesisUtterance(items[currentIndex]);
+                utterance.lang = isChinese ? 'zh-HK' : 'en-US';
+                utterance.rate = 0.9;
+                utterance.pitch = 1.1;
+                speechSynthesis.speak(utterance);
+                // 將當前單詞加入已發音列表
+                if (!pronouncedWords.includes(currentIndex)) {
+                    pronouncedWords.push(currentIndex);
                 }
             } else if (e.code === 'KeyP') {
                 const utterance = new SpeechSynthesisUtterance(items[currentIndex]);
