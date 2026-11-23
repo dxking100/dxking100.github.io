@@ -116,11 +116,11 @@
             padding-top: 20px;
         }
 
-        /* 卡片容器 - 上圖下字，比例 3:7 */
+        /* 卡片容器 - 文字卡佔 100% */
         .cards-container {
             display: grid;
             grid-template-columns: 1fr;
-            grid-template-rows: 3fr 7fr;
+            grid-template-rows: 1fr;
             gap: 20px;
             width: 100%;
             max-width: 1000px;
@@ -154,26 +154,6 @@
             border-color: #ff9a9e;
         }
 
-        /* iframe 卡片 */
-        .iframe-card {
-            background: linear-gradient(135deg, rgba(240, 255, 250, 0.95) 0%, rgba(230, 255, 255, 0.9) 100%);
-            border: 5px solid #a8e6cf;
-            padding: 15px;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-
-        /* iframe 隱藏狀態 */
-        .iframe-card.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-
-        /* iframe 顯示狀態 */
-        .iframe-card.visible {
-            opacity: 1;
-            visibility: visible;
-        }
 
         #content {
             font-size: 10em;
@@ -232,6 +212,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            gap: clamp(10px, 2vmin, 24px);
             width: 100%;
         }
 
@@ -240,22 +221,30 @@
             100% { transform: scale(1); opacity: 1; }
         }
 
-        /* iframe 容器 */
-        .iframe-wrapper {
-            width: 100%;
-            height: 100%;
-            border-radius: 20px;
+        /* 文字卡內嵌圖片框：裁切顯示一張圖 */
+        .word-image-box {
+            width: clamp(150px, 30vmin, 280px);
+            height: clamp(110px, 22vmin, 200px);
+            border-radius: 18px;
             overflow: hidden;
             background: #fff;
+            border: 4px solid #a8e6cf;
             box-shadow: 0 5px 20px rgba(0,0,0,0.1);
             position: relative;
+            flex: 0 0 auto;
+        }
+
+        .word-image-box.hidden {
+            display: none;
         }
 
         #imageFrame {
-            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1200px;
             height: calc(100% + 150px);
             border: none;
-            border-radius: 20px;
             transform: translateY(-150px);
             pointer-events: none;
         }
@@ -377,7 +366,7 @@
 
             .cards-container {
                 grid-template-columns: 1fr;
-                grid-template-rows: 3fr 7fr;
+                grid-template-rows: 1fr;
                 gap: 18px;
                 max-width: 1100px;
             }
@@ -385,10 +374,6 @@
             .card {
                 border-radius: 35px;
                 padding: 20px;
-            }
-
-            .iframe-card {
-                padding: 12px;
             }
 
             #content {
@@ -404,7 +389,7 @@
 
             .cards-container {
                 grid-template-columns: 1fr;
-                grid-template-rows: 3fr 7fr;
+                grid-template-rows: 1fr;
                 gap: 15px;
                 max-width: 100%;
             }
@@ -412,10 +397,6 @@
             .card {
                 border-radius: 25px;
                 padding: 18px;
-            }
-
-            .iframe-card {
-                padding: 12px;
             }
 
             #content {
@@ -435,17 +416,13 @@
 
             .cards-container {
                 grid-template-columns: 1fr;
-                grid-template-rows: 3fr 7fr;
+                grid-template-rows: 1fr;
                 gap: 12px;
             }
 
             .card {
                 border-radius: 20px;
                 padding: 14px;
-            }
-
-            .iframe-card {
-                padding: 10px;
             }
 
             #content {
@@ -532,15 +509,13 @@
         <!-- 中部卡片區域 -->
         <main>
             <div class="cards-container">
-                <!-- 圖片卡片（上方，佔 3） -->
-                <div class="card iframe-card">
-                    <div class="iframe-wrapper">
-                        <iframe id="imageFrame" src="" title="圖片搜索"></iframe>
-                    </div>
-                </div>
-                <!-- 文字卡片（下方，佔 7） -->
+                <!-- 文字卡片（佔 100%，內嵌一張圖片） -->
                 <div class="card text-card">
                     <div class="word-display">
+                        <!-- 圖片框：顯示一張圖 -->
+                        <div class="word-image-box">
+                            <iframe id="imageFrame" src="" title="圖片搜索"></iframe>
+                        </div>
                         <div id="content"></div>
                     </div>
                 </div>
@@ -1050,17 +1025,12 @@
         let isIframeVisible = true; // iframe 顯示狀態 - 默認自動打開
         let pronouncedWords = []; // 記錄已發音的單詞索引
 
-        // 初始化 iframe 為可見狀態（自動打開）
-        document.querySelector('.iframe-card').classList.remove('hidden');
-        document.querySelector('.iframe-card').classList.add('visible');
-
         // 單詞按順序顯示，從第一個開始
         updateContent();
 
         function updateContent() {
             const currentItem = items[currentIndex];
             const contentDiv = document.getElementById('content');
-            const iframeCard = document.querySelector('.iframe-card');
             
             // 觸發重新渲染動畫
             contentDiv.style.animation = 'none';
@@ -1072,14 +1042,8 @@
 
             // 更新單字進度條
             updateProgress();
-            
-            // 切換單詞時保持 iframe 可見（自動打開模式）
-            if (isIframeVisible) {
-                iframeCard.classList.remove('hidden');
-                iframeCard.classList.add('visible');
-            }
-            
-            // 更新 iframe 圖片搜索 URL
+
+            // 更新圖片搜索 URL（文字卡內嵌圖片框）
             updateImageSearch(currentItem);
         }
 
@@ -1156,20 +1120,10 @@
             // iframe 已通過 CSS transform: translateY(-150px) 實現向下偏移 150px
         }
 
-        // 顯示/隱藏圖片按鈕
+        // 顯示/隱藏圖片按鈕（文字卡內嵌圖片框）
         document.getElementById('showAnswer').addEventListener('click', function() {
-            const iframeCard = document.querySelector('.iframe-card');
-
-            // 切換 iframe 顯示狀態
             isIframeVisible = !isIframeVisible;
-            if (isIframeVisible) {
-                iframeCard.classList.remove('hidden');
-                iframeCard.classList.add('visible');
-            } else {
-                iframeCard.classList.remove('visible');
-                iframeCard.classList.add('hidden');
-            }
-            
+            document.querySelector('.word-image-box').classList.toggle('hidden', !isIframeVisible);
             playClickSound();
         });
 
