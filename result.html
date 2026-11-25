@@ -972,13 +972,6 @@
             }
         });
 
-        // 字母拼音聲音對照（用 TTS 近似發出字母真聲音）
-        const letterSounds = {
-            a: 'ah', b: 'buh', c: 'kuh', d: 'duh', e: 'eh', f: 'fff', g: 'guh',
-            h: 'hhh', i: 'ih', j: 'juh', k: 'kuh', l: 'lll', m: 'mmm', n: 'nnn',
-            o: 'oh', p: 'puh', q: 'kwuh', r: 'rrr', s: 'sss', t: 'tuh', u: 'uh',
-            v: 'vvv', w: 'wuh', x: 'ks', y: 'yyy', z: 'zzz'
-        };
 
         // ===== TTS 聲音選擇：英文內容用英文聲音，中文內容用普通話聲音 =====
         let ttsVoices = [];
@@ -1022,10 +1015,8 @@
         }
 
         function speakLetterSound(ch) {
-            const key = (ch || '').toLowerCase();
-            // 英文字母用拼音拼寫發音；中文字直接讀該字（普通話）
-            const text = isChinese ? ch : (letterSounds[key] || key);
-            speakText(text, 0.8);
+            // 直接朗讀字母名（S 讀作 "ess"，不是拼音 /sss/）；中文字則讀該字
+            speakText(ch, 0.8);
         }
 
         // 當前單詞是否全部字母都已高亮
