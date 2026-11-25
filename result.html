@@ -980,14 +980,52 @@
             v: 'vvv', w: 'wuh', x: 'ks', y: 'yyy', z: 'zzz'
         };
 
-        function speakLetterSound(ch) {
-            const key = (ch || '').toLowerCase();
-            const text = letterSounds[key] || key; // 中文或其他字直接讀該字
+        // ===== TTS 聲音選擇：英文內容用英文聲音，中文內容用普通話聲音 =====
+        let ttsVoices = [];
+        function refreshTTSVoices() {
+            ttsVoices = speechSynthesis.getVoices() || [];
+        }
+        refreshTTSVoices();
+        if (speechSynthesis.addEventListener) {
+            speechSynthesis.addEventListener('voiceschanged', refreshTTSVoices);
+        }
+
+        function pickVoice(prefList) {
+            for (const pref of prefList) {
+                const exact = ttsVoices.find(v => v.lang && v.lang.toLowerCase() === pref.toLowerCase());
+                if (exact) return exact;
+            }
+            for (const pref of prefList) {
+                const pre = pref.toLowerCase().split('-')[0];
+                const partial = ttsVoices.find(v => v.lang && v.lang.toLowerCase().indexOf(pre) === 0);
+                if (partial) return partial;
+            }
+            return null;
+        }
+
+        const EN_PREF = ['en-US', 'en-GB', 'en-AU', 'en'];
+        const ZH_PREF = ['zh-CN', 'zh-TW', 'zh-HK', 'zh']; // 中文內容用普通話聲音，明確選聲避免回落到英文
+
+        // 統一朗讀：依內容語言挑選聲音，避免回落到錯誤語言
+        function speakText(text, rate) {
             const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = isChinese ? 'zh-HK' : 'en-US';
-            utterance.rate = 0.8;
+            const voice = isChinese ? pickVoice(ZH_PREF) : pickVoice(EN_PREF);
+            if (voice) {
+                utterance.voice = voice;
+                utterance.lang = voice.lang;
+            } else {
+                utterance.lang = isChinese ? 'zh-CN' : 'en-US';
+            }
+            utterance.rate = rate || 0.9;
             utterance.pitch = 1.1;
             speechSynthesis.speak(utterance);
+        }
+
+        function speakLetterSound(ch) {
+            const key = (ch || '').toLowerCase();
+            // 英文字母用拼音拼寫發音；中文字直接讀該字（普通話）
+            const text = isChinese ? ch : (letterSounds[key] || key);
+            speakText(text, 0.8);
         }
 
         // 當前單詞是否全部字母都已高亮
@@ -1002,11 +1040,7 @@
 
         // 朗讀當前單詞
         function speakCurrentWord() {
-            const utterance = new SpeechSynthesisUtterance(items[currentIndex]);
-            utterance.lang = isChinese ? 'zh-HK' : 'en-US';
-            utterance.rate = 0.9;
-            utterance.pitch = 1.1;
-            speechSynthesis.speak(utterance);
+            speakText(items[currentIndex], 0.9);
         }
 
         // 未全亮就按「下一個」：搖晃單詞卡提示
@@ -1086,11 +1120,7 @@
         // 返回按鈕已在上定義，此處移除重複監聽器
 
         document.getElementById('playAudio').addEventListener('click', function() {
-            const utterance = new SpeechSynthesisUtterance(items[currentIndex]);
-            utterance.lang = isChinese ? 'zh-HK' : 'en-US';
-            utterance.rate = 0.9;
-            utterance.pitch = 1.1;
-            speechSynthesis.speak(utterance);
+            speakText(items[currentIndex], 0.9);
             
             // 將當前單詞加入已發音列表（如果還不在列表中）
             if (!pronouncedWords.includes(currentIndex)) {
@@ -1150,21 +1180,13 @@
                 }
             } else if (e.code === 'Space') {
                 e.preventDefault();
-                const utterance = new SpeechSynthesisUtterance(items[currentIndex]);
-                utterance.lang = isChinese ? 'zh-HK' : 'en-US';
-                utterance.rate = 0.9;
-                utterance.pitch = 1.1;
-                speechSynthesis.speak(utterance);
+                speakText(items[currentIndex], 0.9);
                 // 將當前單詞加入已發音列表
                 if (!pronouncedWords.includes(currentIndex)) {
                     pronouncedWords.push(currentIndex);
                 }
             } else if (e.code === 'KeyP') {
-                const utterance = new SpeechSynthesisUtterance(items[currentIndex]);
-                utterance.lang = isChinese ? 'zh-HK' : 'en-US';
-                utterance.rate = 0.9;
-                utterance.pitch = 1.1;
-                speechSynthesis.speak(utterance);
+                speakText(items[currentIndex], 0.9);
                 // 將當前單詞加入已發音列表
                 if (!pronouncedWords.includes(currentIndex)) {
                     pronouncedWords.push(currentIndex);
