@@ -943,17 +943,52 @@
             }
         }
 
-        // 點擊字母 → 高亮（再點一次取消）
+        // 點擊字母 → 必須依順序點亮，並發出該字母的聲音
         document.getElementById('content').addEventListener('click', function(e) {
             const span = e.target.closest('.letter-span');
             if (!span) return;
-            span.classList.toggle('lit');
-            playClickSound();
-            // 全部高亮完成 → 自動朗讀單詞一次
-            if (span.classList.contains('lit') && allLettersLit()) {
-                speakCurrentWord();
+            if (span.classList.contains('lit')) return; // 已點亮的字母不再反應
+
+            // 只允許點「下一個未點亮」的字母（由左至右順序）
+            const spans = Array.prototype.slice.call(document.querySelectorAll('#content .letter-span'));
+            let nextSpan = null;
+            for (const s of spans) {
+                if (!s.classList.contains('lit')) { nextSpan = s; break; }
+            }
+            if (span !== nextSpan) {
+                // 順序不對：搖晃提示，不點亮
+                span.classList.remove('deny-shake');
+                void span.offsetWidth;
+                span.classList.add('deny-shake');
+                playClickSound();
+                return;
+            }
+
+            span.classList.add('lit');
+            speakLetterSound(span.textContent);
+            // 全部高亮完成 → 稍候自動朗讀整個單詞一次
+            if (allLettersLit()) {
+                setTimeout(speakCurrentWord, 700);
             }
         });
+
+        // 字母拼音聲音對照（用 TTS 近似發出字母真聲音）
+        const letterSounds = {
+            a: 'ah', b: 'buh', c: 'kuh', d: 'duh', e: 'eh', f: 'fff', g: 'guh',
+            h: 'hhh', i: 'ih', j: 'juh', k: 'kuh', l: 'lll', m: 'mmm', n: 'nnn',
+            o: 'oh', p: 'puh', q: 'kwuh', r: 'rrr', s: 'sss', t: 'tuh', u: 'uh',
+            v: 'vvv', w: 'wuh', x: 'ks', y: 'yyy', z: 'zzz'
+        };
+
+        function speakLetterSound(ch) {
+            const key = (ch || '').toLowerCase();
+            const text = letterSounds[key] || key; // 中文或其他字直接讀該字
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = isChinese ? 'zh-HK' : 'en-US';
+            utterance.rate = 0.8;
+            utterance.pitch = 1.1;
+            speechSynthesis.speak(utterance);
+        }
 
         // 當前單詞是否全部字母都已高亮
         function allLettersLit() {
