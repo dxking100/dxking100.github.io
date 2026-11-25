@@ -196,6 +196,86 @@
             100% { transform: scale(1); }
         }
 
+        /* 單詞框空格槽（英文拖拽模式：空虛線格，填入後變實心） */
+        .letter-span.slot {
+            min-width: 1.05em;
+            height: 1.25em;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            vertical-align: middle;
+        }
+
+        .letter-span.slot.wrong {
+            border-color: #ff4757;
+            background: #ffe3e6;
+        }
+
+        /* 拼對完成：整個單詞變綠慶祝 */
+        #content.success-flash .letter-span.lit {
+            background: linear-gradient(135deg, #a8e6cf 0%, #2ecc71 100%);
+            border-color: #27ae60;
+        }
+
+        /* 提示單詞（單詞框上方） */
+        .hint-word {
+            font-size: clamp(1.4rem, 5vmin, 2.6rem);
+            font-weight: bold;
+            color: #999;
+            letter-spacing: 0.06em;
+            line-height: 1.2;
+            word-break: break-word;
+            text-align: center;
+        }
+
+        /* 打亂字母磚區域 */
+        .bank-area {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: clamp(8px, 1.4vmin, 16px);
+            min-height: clamp(46px, 7.5vmin, 82px);
+            margin-top: clamp(6px, 1.2vmin, 14px);
+        }
+
+        .bank-tile {
+            width: clamp(46px, 7.5vmin, 82px);
+            height: clamp(46px, 7.5vmin, 82px);
+            border-radius: 16px;
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            border: 3px solid #fff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(24px, 4.4vmin, 48px);
+            font-weight: bold;
+            color: #333;
+            cursor: grab;
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .bank-tile.selected {
+            transform: scale(1.12);
+            box-shadow: 0 0 0 4px #ff9a9e, 0 8px 20px rgba(0,0,0,0.25);
+        }
+
+        .bank-tile.dragging { opacity: 0.35; }
+
+        .bank-tile.ghost {
+            position: fixed;
+            z-index: 9999;
+            margin: 0;
+            pointer-events: none;
+            transform: scale(1.1) rotate(-3deg);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+            opacity: 1;
+        }
+
         /* 未全亮就按「下一個」時的搖晃提示 */
         @keyframes denyShake {
             0%, 100% { transform: translateX(0); }
@@ -384,7 +464,12 @@
                         <div class="word-image-box">
                             <iframe id="imageFrame" src="" title="圖片搜索"></iframe>
                         </div>
+                        <!-- 提示單詞 -->
+                        <div id="hintWord" class="hint-word"></div>
+                        <!-- 單詞框：英文為空格槽（拖入組詞），中文為可點字 -->
                         <div id="content"></div>
+                        <!-- 打亂的字母磚區域 -->
+                        <div id="letterBank" class="bank-area"></div>
                     </div>
                 </div>
             </div>
@@ -892,6 +977,8 @@
         let currentIndex = 0;
         let isIframeVisible = true; // iframe 顯示狀態 - 默認自動打開
         let pronouncedWords = []; // 記錄已發音的單詞索引
+        let selectedTile = null;  // 目前輕點選中的字母磚
+        let dragState = null;     // 目前拖動狀態
 
         // 單詞按順序顯示，從第一個開始
         updateContent();
@@ -905,8 +992,11 @@
             contentDiv.offsetHeight; // 觸發重繪
             contentDiv.style.animation = 'contentPop 0.5s ease';
             
-            // 建立可點擊字母（逐字高亮）
+            // 建立單詞框（英文：空格槽；中文：可點擊字）
             buildLetters(contentDiv, currentItem);
+
+            // 建立打亂字母磚區域（英文拖拽拼字）
+            setupBank(currentItem);
 
             // 更新單字進度條
             updateProgress();
@@ -931,6 +1021,22 @@
         // 把單詞拆成可點擊的字母 span（空格保留為一般文字，維持換行）
         function buildLetters(container, word) {
             container.innerHTML = '';
+            container.classList.remove('success-flash');
+            // 英文：空單詞框（空格槽），字母由下方磚區拖入組成
+            if (!isChinese && /^[a-zA-Z\s]+$/.test(word)) {
+                for (const ch of word) {
+                    if (ch === ' ') {
+                        container.appendChild(document.createTextNode(' '));
+                        continue;
+                    }
+                    const span = document.createElement('span');
+                    span.className = 'letter-span slot';
+                    span.dataset.answer = ch.toLowerCase();
+                    container.appendChild(span);
+                }
+                return;
+            }
+            // 中文：逐字可點擊
             for (const ch of word) {
                 if (ch === ' ') {
                     container.appendChild(document.createTextNode(' '));
@@ -943,11 +1049,158 @@
             }
         }
 
-        // 點擊字母 → 必須依順序點亮，並發出該字母的聲音
+        // ===== 拖拽拼字區：打亂字母磚，拖/點入單詞框組詞 =====
+        function setupBank(word) {
+            const bank = document.getElementById('letterBank');
+            const hint = document.getElementById('hintWord');
+            selectedTile = null;
+            dragState = null;
+            bank.innerHTML = '';
+
+            // 中文或非純英文單詞：不顯示拖拽區與提示詞
+            if (isChinese || !/^[a-zA-Z\s]+$/.test(word)) {
+                bank.style.display = 'none';
+                hint.style.display = 'none';
+                return;
+            }
+            hint.style.display = '';
+            hint.textContent = word;
+            bank.style.display = '';
+
+            const letters = [];
+            for (const ch of word) {
+                if (ch !== ' ') letters.push(ch);
+            }
+            // 打亂字母順序
+            for (let i = letters.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [letters[i], letters[j]] = [letters[j], letters[i]];
+            }
+            letters.forEach(function(ch) { bank.appendChild(createTile(ch)); });
+        }
+
+        function createTile(ch) {
+            const tile = document.createElement('div');
+            tile.className = 'bank-tile';
+            tile.textContent = ch;
+            tile.dataset.letter = ch.toLowerCase();
+            attachTileDrag(tile);
+            return tile;
+        }
+
+        function clearTileSelection() {
+            if (selectedTile) selectedTile.classList.remove('selected');
+            selectedTile = null;
+        }
+
+        // iPad 觸控拖拽：Pointer Events + 跟隨手指的 ghost 副本；輕點則選中
+        function attachTileDrag(tile) {
+            tile.addEventListener('pointerdown', function(e) {
+                e.preventDefault();
+                const rect = tile.getBoundingClientRect();
+                const ghost = tile.cloneNode(true);
+                ghost.classList.add('ghost');
+                ghost.classList.remove('selected');
+                ghost.style.width = rect.width + 'px';
+                ghost.style.height = rect.height + 'px';
+                ghost.style.left = rect.left + 'px';
+                ghost.style.top = rect.top + 'px';
+                document.body.appendChild(ghost);
+                dragState = { tile: tile, ghost: ghost, ox: rect.left, oy: rect.top, sx: e.clientX, sy: e.clientY, moved: false };
+                tile.classList.add('dragging');
+                try { tile.setPointerCapture(e.pointerId); } catch (err) {}
+            });
+            tile.addEventListener('pointermove', function(e) {
+                if (!dragState || dragState.tile !== tile) return;
+                const dx = e.clientX - dragState.sx;
+                const dy = e.clientY - dragState.sy;
+                if (Math.abs(dx) > 6 || Math.abs(dy) > 6) dragState.moved = true;
+                dragState.ghost.style.left = (dragState.ox + dx) + 'px';
+                dragState.ghost.style.top = (dragState.oy + dy) + 'px';
+            });
+            tile.addEventListener('pointerup', function(e) {
+                if (!dragState || dragState.tile !== tile) return;
+                const wasDrag = dragState.moved;
+                const ghost = dragState.ghost;
+                dragState = null;
+                tile.classList.remove('dragging');
+                if (ghost && ghost.parentNode) ghost.parentNode.removeChild(ghost);
+                if (wasDrag) {
+                    clearTileSelection();
+                    const el = document.elementFromPoint(e.clientX, e.clientY);
+                    const slot = el ? el.closest('.letter-span.slot') : null;
+                    if (slot && !slot.classList.contains('lit')) {
+                        attemptPlace(tile, slot);
+                    }
+                } else {
+                    // 輕點：選中／取消選中
+                    if (selectedTile === tile) {
+                        clearTileSelection();
+                    } else {
+                        clearTileSelection();
+                        selectedTile = tile;
+                        tile.classList.add('selected');
+                    }
+                }
+            });
+            tile.addEventListener('pointercancel', function() {
+                if (!dragState || dragState.tile !== tile) return;
+                const ghost = dragState.ghost;
+                dragState = null;
+                tile.classList.remove('dragging');
+                if (ghost && ghost.parentNode) ghost.parentNode.removeChild(ghost);
+            });
+        }
+
+        // 放入字母磚：對 → 鎖定並讀字母音；錯 → 搖晃紅框提示
+        function attemptPlace(tile, slot) {
+            if (tile.dataset.letter === slot.dataset.answer) {
+                slot.textContent = tile.textContent;
+                slot.classList.add('lit');
+                slot.classList.remove('wrong');
+                if (tile.parentNode) tile.parentNode.removeChild(tile);
+                clearTileSelection();
+                speakLetterSound(tile.textContent);
+                if (allLettersLit()) {
+                    document.getElementById('content').classList.add('success-flash');
+                    setTimeout(speakCurrentWord, 700);
+                }
+            } else {
+                slot.classList.remove('wrong', 'deny-shake');
+                void slot.offsetWidth;
+                slot.classList.add('wrong', 'deny-shake');
+                clearTileSelection();
+                playErrorSound();
+            }
+        }
+
+        // 錯誤提示音（低鳴）
+        function playErrorSound() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            oscillator.frequency.value = 180;
+            oscillator.type = 'square';
+            gainNode.gain.setValueAtTime(0.25, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.25);
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.25);
+        }
+
+        // 點擊單詞框：中文逐字順序點亮；英文為タップ空格槽放入已選字母磚
         document.getElementById('content').addEventListener('click', function(e) {
             const span = e.target.closest('.letter-span');
             if (!span) return;
-            if (span.classList.contains('lit')) return; // 已點亮的字母不再反應
+            // 英文拖拽模式：點空格槽放入已選中的字母磚
+            if (!isChinese) {
+                if (span.classList.contains('slot') && !span.classList.contains('lit') && selectedTile) {
+                    attemptPlace(selectedTile, span);
+                }
+                return;
+            }
+            if (span.classList.contains('lit')) return; // 已點亮的字不再反應
 
             // 只允許點「下一個未點亮」的字母（由左至右順序）
             const spans = Array.prototype.slice.call(document.querySelectorAll('#content .letter-span'));
