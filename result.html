@@ -109,6 +109,7 @@
         /* 中部內容區域 */
         main {
             flex: 1;
+            min-height: 0;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
@@ -116,16 +117,17 @@
             padding-top: 20px;
         }
 
-        /* 卡片容器 - 文字卡佔 100% */
+        /* 卡片容器 - 文字卡佔 100%（行高限制為可用空間，長單詞不再擑爆） */
         .cards-container {
             display: grid;
             grid-template-columns: 1fr;
-            grid-template-rows: 1fr;
+            grid-template-rows: minmax(0, 1fr);
             gap: clamp(12px, 2vmin, 20px);
             width: 100%;
             max-width: 100%;
             margin: 0 auto;
             height: 100%;
+            min-height: 0;
         }
 
         /* 卡片樣式 */
@@ -141,6 +143,7 @@
             overflow: hidden;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             position: relative;
+            min-height: 0;
         }
 
         .card:hover {
@@ -368,6 +371,7 @@
 
         /* 底部按鈕區域 */
         footer {
+            flex: 0 0 auto;
             background: linear-gradient(135deg, #a8e6cf 0%, #88d8b0 100%);
             border-radius: 30px;
             padding: clamp(14px, 2.5vmin, 20px);
@@ -1314,11 +1318,14 @@
             // 先還原為 clamp() 流體字級，再視需要縮小
             contentDiv.style.fontSize = '';
             const cs = getComputedStyle(card);
-            const avail = card.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+            // 以容器可用高度計算（非已撐高的卡片），長單詞如 watermelon 才能正確縮字
+            const holder = document.querySelector('.cards-container');
+            const holderH = holder && holder.clientHeight ? holder.clientHeight : card.clientHeight;
+            const avail = holderH - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
             let size = parseFloat(getComputedStyle(contentDiv).fontSize);
             let guard = 0;
-            while (guard++ < 14 && wrap.offsetHeight > avail + 2 && size > 16) {
-                size = Math.max(16, size * 0.9);
+            while (guard++ < 20 && wrap.offsetHeight > avail + 2 && size > 14) {
+                size = Math.max(14, size * 0.9);
                 contentDiv.style.fontSize = size + 'px';
             }
         }
