@@ -1360,20 +1360,15 @@
         // ===== 考試模式：遮蓋提示詞、記錄錯誤、結束評分與煙花 =====
         function getExamMask(index, word) {
             if (!examMasks[index]) {
+                // 遮蓋規則：顯示 1 個、遮蓋 2 個循環（如 apple → a _ _ l _），空格保留為詞間隔
                 const chars = Array.from(word);
-                const letterIdx = chars.map((c, i) => i).filter(i => /[a-zA-Z]/.test(chars[i]));
-                if (letterIdx.length >= 2) {
-                    const hideCount = Math.min(letterIdx.length - 1, Math.max(1, Math.round(letterIdx.length / 2)));
-                    const pool = letterIdx.slice();
-                    for (let i = pool.length - 1; i > 0; i--) {
-                        const j = Math.floor(Math.random() * (i + 1));
-                        [pool[i], pool[j]] = [pool[j], pool[i]];
-                    }
-                    const hideSet = new Set(pool.slice(0, hideCount));
-                    examMasks[index] = chars.map((c, i) => hideSet.has(i) ? '_' : c).join('');
-                } else {
-                    examMasks[index] = word;
-                }
+                let li = -1;
+                const masked = chars.map(function(c) {
+                    if (!/[a-zA-Z]/.test(c)) return c;
+                    li++;
+                    return li % 3 === 0 ? c : '_';
+                });
+                examMasks[index] = masked.join(' ');
             }
             return examMasks[index];
         }
