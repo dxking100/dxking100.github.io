@@ -231,6 +231,96 @@
             text-align: center;
         }
 
+        /* ===== 考試模式 ===== */
+        .exam-badge {
+            position: absolute;
+            top: clamp(6px, 1.5vmin, 12px);
+            right: clamp(8px, 2vmin, 16px);
+            background: #ff4757;
+            color: #fff;
+            border-radius: 20px;
+            padding: 4px 14px;
+            font-weight: bold;
+            font-size: clamp(0.9rem, 2.4vmin, 1.2rem);
+            z-index: 5;
+            box-shadow: 0 4px 12px rgba(255, 71, 87, 0.4);
+        }
+
+        .control-btn.exam-active {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            border-color: #feca57;
+        }
+
+        .exam-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .exam-overlay[hidden] { display: none; }
+
+        #fireworksCanvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .exam-panel {
+            position: relative;
+            z-index: 2;
+            background: #fff;
+            border-radius: 30px;
+            padding: clamp(18px, 4vmin, 36px);
+            width: min(560px, 92vw);
+            max-height: 84vh;
+            overflow: auto;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+        }
+
+        .exam-title {
+            font-size: clamp(1.4rem, 4.5vmin, 2.2rem);
+            font-weight: bold;
+            color: #1e5631;
+            margin-bottom: 6px;
+        }
+
+        .exam-score {
+            font-size: clamp(2.6rem, 11vmin, 5rem);
+            font-weight: bold;
+            color: #ff9a9e;
+            line-height: 1.2;
+        }
+
+        .exam-note {
+            color: #888;
+            font-size: clamp(0.85rem, 2.2vmin, 1.05rem);
+            margin-bottom: 8px;
+        }
+
+        .exam-detail {
+            text-align: left;
+            font-size: clamp(0.9rem, 2.6vmin, 1.15rem);
+            color: #555;
+            max-height: 34vh;
+            overflow: auto;
+            margin: 8px auto 14px;
+            line-height: 1.7;
+            max-width: 420px;
+        }
+
+        .exam-btns {
+            display: flex;
+            gap: clamp(10px, 2.5vmin, 18px);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
         /* 打亂字母磚區域 */
         .bank-area {
             display: flex;
@@ -463,6 +553,7 @@
             <div class="cards-container">
                 <!-- 文字卡片（佔 100%，內嵌一張圖片） -->
                 <div class="card text-card">
+                    <div id="examBadge" class="exam-badge" hidden>❌ 0</div>
                     <div class="word-display">
                         <!-- 圖片框：顯示一張圖 -->
                         <div class="word-image-box">
@@ -501,8 +592,24 @@
                 <button id="next" class="control-btn">
                     ⏭️
                 </button>
+                <button id="examMode" class="control-btn" title="考試模式：遮蓋部分提示詞、記錄錯誤、結束評分">📝</button>
             </div>
         </footer>
+
+        <!-- 考試結果彈窗（滿分放煙花） -->
+        <div id="examResult" class="exam-overlay" hidden>
+            <canvas id="fireworksCanvas"></canvas>
+            <div class="exam-panel">
+                <div id="examTitle" class="exam-title">📝 考試結果</div>
+                <div id="examScore" class="exam-score">0 分</div>
+                <div class="exam-note">每次移動錯誤扣 5 分</div>
+                <div id="examDetail" class="exam-detail"></div>
+                <div class="exam-btns">
+                    <button id="examRetry" class="control-btn">🔄 再考一次</button>
+                    <button id="examExit" class="control-btn">✏️ 返回練習</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -983,6 +1090,21 @@
         let pronouncedWords = []; // 記錄已發音的單詞索引
         let selectedTile = null;  // 目前輕點選中的字母磚
         let dragState = null;     // 目前拖動狀態
+        let examMode = false;     // 考試模式：遮蓋部分提示詞＋記錄錯誤＋結束評分
+        let examErrors = {};      // 每個單詞的移動錯誤次數 { index: count }
+        let examMasks = {};       // 當次考試每個單詞的遮蓋提示詞快取
+
+        // 中文詞表不適用考試模式
+        if (isChinese) {
+            const eb0 = document.getElementById('examMode');
+            eb0.disabled = true;
+            eb0.title = '考試模式（僅英文單詞）';
+        }
+        // URL 直接進入考試模式（方便測試/分享）；須在首次渲染前生效
+        if (urlParams.get('exam') === '1' && !isChinese) {
+            examMode = true;
+            document.getElementById('examMode').classList.add('exam-active');
+        }
 
         // 單詞按順序顯示，從第一個開始
         updateContent();
@@ -1010,6 +1132,7 @@
 
             // 自適應：若單詞超出卡片高度則自動縮小字級
             fitContent();
+            updateExamBadge();
         }
 
         // 更新單字進度條（第幾個 / 共幾個）
@@ -1068,7 +1191,7 @@
                 return;
             }
             hint.style.display = '';
-            hint.textContent = word;
+            hint.textContent = examMode ? getExamMask(currentIndex, word) : word;
             bank.style.display = '';
 
             const letters = [];
@@ -1168,12 +1291,16 @@
                 if (allLettersLit()) {
                     document.getElementById('content').classList.add('success-flash');
                     setTimeout(speakCurrentWord, 700);
+                    if (examMode && currentIndex === items.length - 1) {
+                        setTimeout(showExamResult, 1600);
+                    }
                 }
             } else {
                 slot.classList.remove('wrong', 'deny-shake');
                 void slot.offsetWidth;
                 slot.classList.add('wrong', 'deny-shake');
                 clearTileSelection();
+                if (examMode) recordExamError();
                 playErrorSound();
             }
         }
@@ -1229,6 +1356,158 @@
             }
         });
 
+
+        // ===== 考試模式：遮蓋提示詞、記錄錯誤、結束評分與煙花 =====
+        function getExamMask(index, word) {
+            if (!examMasks[index]) {
+                const chars = Array.from(word);
+                const letterIdx = chars.map((c, i) => i).filter(i => /[a-zA-Z]/.test(chars[i]));
+                if (letterIdx.length >= 2) {
+                    const hideCount = Math.min(letterIdx.length - 1, Math.max(1, Math.round(letterIdx.length / 2)));
+                    const pool = letterIdx.slice();
+                    for (let i = pool.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [pool[i], pool[j]] = [pool[j], pool[i]];
+                    }
+                    const hideSet = new Set(pool.slice(0, hideCount));
+                    examMasks[index] = chars.map((c, i) => hideSet.has(i) ? '_' : c).join('');
+                } else {
+                    examMasks[index] = word;
+                }
+            }
+            return examMasks[index];
+        }
+
+        function recordExamError() {
+            examErrors[currentIndex] = (examErrors[currentIndex] || 0) + 1;
+            updateExamBadge();
+        }
+
+        function updateExamBadge() {
+            const badge = document.getElementById('examBadge');
+            const englishWord = !isChinese && /^[a-zA-Z\s]+$/.test(items[currentIndex] || '');
+            if (!examMode || !englishWord) { badge.hidden = true; return; }
+            badge.hidden = false;
+            badge.textContent = '❌ ' + (examErrors[currentIndex] || 0);
+        }
+
+        function showExamResult() {
+            const overlay = document.getElementById('examResult');
+            if (!overlay.hidden) return;
+            let totalErr = 0;
+            const lines = [];
+            for (let i = 0; i < items.length; i++) {
+                const e = examErrors[i] || 0;
+                totalErr += e;
+                lines.push('<div>' + (i + 1) + '. ' + items[i] + '　' + (e === 0 ? '✅ 0 次錯誤' : '❌ ' + e + ' 次錯誤') + '</div>');
+            }
+            const score = Math.max(0, 100 - totalErr * 5);
+            document.getElementById('examScore').textContent = score + ' 分';
+            document.getElementById('examTitle').textContent = score === 100 ? '🎆 滿分！太棒了！' : '📝 考試結果';
+            document.getElementById('examDetail').innerHTML = lines.join('');
+            overlay.hidden = false;
+            if (score === 100) startFireworks(); else stopFireworks();
+            speakText('Your score is ' + score, 0.9);
+        }
+
+        function hideExamResult() {
+            document.getElementById('examResult').hidden = true;
+            stopFireworks();
+        }
+
+        document.getElementById('examMode').addEventListener('click', function() {
+            if (isChinese) return;
+            examMode = !examMode;
+            examErrors = {};
+            examMasks = {};
+            this.classList.toggle('exam-active', examMode);
+            if (examMode) currentIndex = 0;
+            hideExamResult();
+            updateContent();
+            playClickSound();
+        });
+
+        document.getElementById('examRetry').addEventListener('click', function() {
+            examErrors = {};
+            examMasks = {};
+            currentIndex = 0;
+            hideExamResult();
+            updateContent();
+            playClickSound();
+        });
+
+        document.getElementById('examExit').addEventListener('click', function() {
+            examMode = false;
+            examErrors = {};
+            examMasks = {};
+            document.getElementById('examMode').classList.remove('exam-active');
+            hideExamResult();
+            updateContent();
+            playClickSound();
+        });
+
+        // ===== 煙花效果（滿分慶祝） =====
+        const fw = { running: false, raf: 0, rockets: [], parts: [], last: 0 };
+        function fwResize() {
+            const c = document.getElementById('fireworksCanvas');
+            c.width = c.clientWidth || window.innerWidth;
+            c.height = c.clientHeight || window.innerHeight;
+        }
+        function startFireworks() {
+            const c = document.getElementById('fireworksCanvas');
+            fwResize();
+            fw.running = true; fw.rockets = []; fw.parts = []; fw.last = 0;
+            const step = function(ts) {
+                if (!fw.running) return;
+                const ctx = c.getContext('2d');
+                ctx.clearRect(0, 0, c.width, c.height);
+                if (!fw.last) fw.last = ts;
+                const dt = Math.min(50, ts - fw.last) / 1000;
+                fw.last = ts;
+                if (Math.random() < dt * 1.8) {
+                    fw.rockets.push({
+                        x: c.width * (0.15 + Math.random() * 0.7),
+                        y: c.height,
+                        vx: (Math.random() - 0.5) * 60,
+                        vy: -(c.height * (0.55 + Math.random() * 0.35)),
+                        hue: Math.floor(Math.random() * 360)
+                    });
+                }
+                for (let i = fw.rockets.length - 1; i >= 0; i--) {
+                    const r = fw.rockets[i];
+                    r.x += r.vx * dt; r.y += r.vy * dt; r.vy += 300 * dt;
+                    ctx.beginPath(); ctx.arc(r.x, r.y, 3, 0, 7);
+                    ctx.fillStyle = 'hsl(' + r.hue + ',100%,70%)'; ctx.fill();
+                    if (r.vy > -80) {
+                        for (let k = 0; k < 60; k++) {
+                            const a = Math.random() * Math.PI * 2;
+                            const sp = 60 + Math.random() * 220;
+                            fw.parts.push({ x: r.x, y: r.y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, life: 1, hue: r.hue + Math.random() * 40 - 20 });
+                        }
+                        fw.rockets.splice(i, 1);
+                    }
+                }
+                for (let i = fw.parts.length - 1; i >= 0; i--) {
+                    const p = fw.parts[i];
+                    p.life -= dt * 0.7;
+                    if (p.life <= 0) { fw.parts.splice(i, 1); continue; }
+                    p.x += p.vx * dt; p.y += p.vy * dt; p.vy += 160 * dt; p.vx *= 0.99;
+                    ctx.globalAlpha = Math.max(0, p.life);
+                    ctx.beginPath(); ctx.arc(p.x, p.y, 2.5, 0, 7);
+                    ctx.fillStyle = 'hsl(' + p.hue + ',100%,60%)'; ctx.fill();
+                    ctx.globalAlpha = 1;
+                }
+                fw.raf = requestAnimationFrame(step);
+            };
+            fw.raf = requestAnimationFrame(step);
+        }
+        function stopFireworks() {
+            fw.running = false;
+            if (fw.raf) cancelAnimationFrame(fw.raf);
+            const c = document.getElementById('fireworksCanvas');
+            if (c) { const ctx = c.getContext('2d'); ctx.clearRect(0, 0, c.width, c.height); }
+        }
+        window.addEventListener('resize', function() { if (fw.running) fwResize(); });
 
         // ===== TTS 聲音選擇：英文內容用英文聲音，中文內容用普通話聲音 =====
         let ttsVoices = [];
@@ -1364,6 +1643,8 @@
             if (currentIndex < items.length - 1) {
                 currentIndex++;
                 updateContent();
+            } else if (examMode) {
+                showExamResult();
             }
             playClickSound();
         });
